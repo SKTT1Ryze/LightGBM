@@ -1,5 +1,5 @@
 option(USE_MPI "Enable MPI-based distributed learning" OFF)
-option(USE_OPENMP "Enable OpenMP" ON)
+option(USE_OPENMP "Enable OpenMP" OFF)
 option(USE_GPU "Enable GPU-accelerated training" OFF)
 option(USE_SWIG "Enable SWIG to generate Java API" OFF)
 option(USE_HDFS "Enable HDFS support (EXPERIMENTAL)" OFF)
@@ -17,12 +17,12 @@ set(
 Supported sanitizers are address, leak, undefined and thread."
 )
 option(BUILD_CPP_TEST "Build C++ tests with Google Test" OFF)
-option(BUILD_STATIC_LIB "Build static library" OFF)
+option(BUILD_STATIC_LIB "Build static library" ON)
 option(__BUILD_FOR_R "Set to ON if building lib_lightgbm for use with the R package" OFF)
 option(__INTEGRATE_OPENCL "Set to ON if building LightGBM with the OpenCL ICD Loader and its dependencies included" OFF)
 
 if(APPLE)
-  option(APPLE_OUTPUT_DYLIB "Output dylib shared library" OFF)
+  option(APPLE_OUTPUT_DYLIB "Output dylib shared library" ON)
 endif()
 
 if(__INTEGRATE_OPENCL)
