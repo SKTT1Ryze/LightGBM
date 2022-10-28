@@ -8,15 +8,15 @@
 #include <LightGBM/config.h>
 // #include <LightGBM/dataset.h>
 // #include <LightGBM/dataset_loader.h>
-#include <LightGBM/metric.h>
-#include <LightGBM/network.h>
-#include <LightGBM/objective_function.h>
+// #include <LightGBM/metric.h>
+// #include <LightGBM/network.h>
+// #include <LightGBM/objective_function.h>
 #include <LightGBM/prediction_early_stop.h>
-#include <LightGBM/utils/common.h>
-#include <LightGBM/utils/log.h>
-#include <LightGBM/utils/openmp_wrapper.h>
-#include <LightGBM/utils/random.h>
-#include <LightGBM/utils/threading.h>
+// #include <LightGBM/utils/common.h>
+// #include <LightGBM/utils/log.h>
+// #include <LightGBM/utils/openmp_wrapper.h>
+// #include <LightGBM/utils/random.h>
+// #include <LightGBM/utils/threading.h>
 
 #include <string>
 #include <cstdio>
@@ -830,57 +830,57 @@ class Booster {
 }  // namespace LightGBM
 
 // explicitly declare symbols from LightGBM namespace
-using LightGBM::AllgatherFunction;
+// using LightGBM::AllgatherFunction;
 using LightGBM::Booster;
-using LightGBM::Common::CheckElementsIntervalClosed;
-using LightGBM::Common::RemoveQuotationSymbol;
-using LightGBM::Common::Vector2Ptr;
-using LightGBM::Common::VectorSize;
-using LightGBM::Config;
-using LightGBM::data_size_t;
+// using LightGBM::Common::CheckElementsIntervalClosed;
+// using LightGBM::Common::RemoveQuotationSymbol;
+// using LightGBM::Common::Vector2Ptr;
+// using LightGBM::Common::VectorSize;
+// using LightGBM::Config;
+// using LightGBM::data_size_t;
 // using LightGBM::Dataset;
 // using LightGBM::DatasetLoader;
-using LightGBM::kZeroThreshold;
+// using LightGBM::kZeroThreshold;
 using LightGBM::LGBM_APIHandleException;
-using LightGBM::Log;
-using LightGBM::Network;
-using LightGBM::Random;
-using LightGBM::ReduceScatterFunction;
+// using LightGBM::Log;
+// using LightGBM::Network;
+// using LightGBM::Random;
+// using LightGBM::ReduceScatterFunction;
 
 // some help functions used to convert data
 
-std::function<std::vector<double>(int row_idx)>
-RowFunctionFromDenseMatric(const void* data, int num_row, int num_col, int data_type, int is_row_major);
-
-std::function<std::vector<std::pair<int, double>>(int row_idx)>
-RowPairFunctionFromDenseMatric(const void* data, int num_row, int num_col, int data_type, int is_row_major);
-
-std::function<std::vector<std::pair<int, double>>(int row_idx)>
-RowPairFunctionFromDenseRows(const void** data, int num_col, int data_type);
-
-template<typename T>
-std::function<std::vector<std::pair<int, double>>(T idx)>
-RowFunctionFromCSR(const void* indptr, int indptr_type, const int32_t* indices,
-                   const void* data, int data_type, int64_t nindptr, int64_t nelem);
-
-// Row iterator of on column for CSC matrix
-class CSC_RowIterator {
- public:
-  CSC_RowIterator(const void* col_ptr, int col_ptr_type, const int32_t* indices,
-                  const void* data, int data_type, int64_t ncol_ptr, int64_t nelem, int col_idx);
-  ~CSC_RowIterator() {}
-  // return value at idx, only can access by ascent order
-  double Get(int idx);
-  // return next non-zero pair, if index < 0, means no more data
-  std::pair<int, double> NextNonZero();
-
- private:
-  int nonzero_idx_ = 0;
-  int cur_idx_ = -1;
-  double cur_val_ = 0.0f;
-  bool is_end_ = false;
-  std::function<std::pair<int, double>(int idx)> iter_fun_;
-};
+// std::function<std::vector<double>(int row_idx)>
+// RowFunctionFromDenseMatric(const void* data, int num_row, int num_col, int data_type, int is_row_major);
+//
+// std::function<std::vector<std::pair<int, double>>(int row_idx)>
+// RowPairFunctionFromDenseMatric(const void* data, int num_row, int num_col, int data_type, int is_row_major);
+//
+// std::function<std::vector<std::pair<int, double>>(int row_idx)>
+// RowPairFunctionFromDenseRows(const void** data, int num_col, int data_type);
+//
+// template<typename T>
+// std::function<std::vector<std::pair<int, double>>(T idx)>
+// RowFunctionFromCSR(const void* indptr, int indptr_type, const int32_t* indices,
+//                    const void* data, int data_type, int64_t nindptr, int64_t nelem);
+//
+// // Row iterator of on column for CSC matrix
+// class CSC_RowIterator {
+//  public:
+//   CSC_RowIterator(const void* col_ptr, int col_ptr_type, const int32_t* indices,
+//                   const void* data, int data_type, int64_t ncol_ptr, int64_t nelem, int col_idx);
+//   ~CSC_RowIterator() {}
+//   // return value at idx, only can access by ascent order
+//   double Get(int idx);
+//   // return next non-zero pair, if index < 0, means no more data
+//   std::pair<int, double> NextNonZero();
+//
+//  private:
+//   int nonzero_idx_ = 0;
+//   int cur_idx_ = -1;
+//   double cur_val_ = 0.0f;
+//   bool is_end_ = false;
+//   std::function<std::pair<int, double>(int idx)> iter_fun_;
+// };
 
 // start of c_api functions
 
