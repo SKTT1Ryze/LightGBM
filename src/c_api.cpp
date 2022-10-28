@@ -57,51 +57,51 @@ yamc::shared_lock<yamc::alternate::shared_mutex> lock(&mtx);
 const int PREDICTOR_TYPES = 4;
 
 // Single row predictor to abstract away caching logic
-class SingleRowPredictor {
- public:
-  PredictFunction predict_function;
-  int64_t num_pred_in_one_row;
-
-  SingleRowPredictor(int predict_type, Boosting* boosting, const Config& config, int start_iter, int num_iter) {
-    bool is_predict_leaf = false;
-    bool is_raw_score = false;
-    bool predict_contrib = false;
-    if (predict_type == C_API_PREDICT_LEAF_INDEX) {
-      is_predict_leaf = true;
-    } else if (predict_type == C_API_PREDICT_RAW_SCORE) {
-      is_raw_score = true;
-    } else if (predict_type == C_API_PREDICT_CONTRIB) {
-      predict_contrib = true;
-    }
-    early_stop_ = config.pred_early_stop;
-    early_stop_freq_ = config.pred_early_stop_freq;
-    early_stop_margin_ = config.pred_early_stop_margin;
-    iter_ = num_iter;
-    predictor_.reset(new Predictor(boosting, start_iter, iter_, is_raw_score, is_predict_leaf, predict_contrib,
-                                   early_stop_, early_stop_freq_, early_stop_margin_));
-    num_pred_in_one_row = boosting->NumPredictOneRow(start_iter, iter_, is_predict_leaf, predict_contrib);
-    predict_function = predictor_->GetPredictFunction();
-    num_total_model_ = boosting->NumberOfTotalModel();
-  }
-
-  ~SingleRowPredictor() {}
-
-  bool IsPredictorEqual(const Config& config, int iter, Boosting* boosting) {
-    return early_stop_ == config.pred_early_stop &&
-      early_stop_freq_ == config.pred_early_stop_freq &&
-      early_stop_margin_ == config.pred_early_stop_margin &&
-      iter_ == iter &&
-      num_total_model_ == boosting->NumberOfTotalModel();
-  }
-
- private:
-  std::unique_ptr<Predictor> predictor_;
-  bool early_stop_;
-  int early_stop_freq_;
-  double early_stop_margin_;
-  int iter_;
-  int num_total_model_;
-};
+// class SingleRowPredictor {
+//  public:
+//   PredictFunction predict_function;
+//   int64_t num_pred_in_one_row;
+//
+//   SingleRowPredictor(int predict_type, Boosting* boosting, const Config& config, int start_iter, int num_iter) {
+//     bool is_predict_leaf = false;
+//     bool is_raw_score = false;
+//     bool predict_contrib = false;
+//     if (predict_type == C_API_PREDICT_LEAF_INDEX) {
+//       is_predict_leaf = true;
+//     } else if (predict_type == C_API_PREDICT_RAW_SCORE) {
+//       is_raw_score = true;
+//     } else if (predict_type == C_API_PREDICT_CONTRIB) {
+//       predict_contrib = true;
+//     }
+//     early_stop_ = config.pred_early_stop;
+//     early_stop_freq_ = config.pred_early_stop_freq;
+//     early_stop_margin_ = config.pred_early_stop_margin;
+//     iter_ = num_iter;
+//     predictor_.reset(new Predictor(boosting, start_iter, iter_, is_raw_score, is_predict_leaf, predict_contrib,
+//                                    early_stop_, early_stop_freq_, early_stop_margin_));
+//     num_pred_in_one_row = boosting->NumPredictOneRow(start_iter, iter_, is_predict_leaf, predict_contrib);
+//     predict_function = predictor_->GetPredictFunction();
+//     num_total_model_ = boosting->NumberOfTotalModel();
+//   }
+//
+//   ~SingleRowPredictor() {}
+//
+//   bool IsPredictorEqual(const Config& config, int iter, Boosting* boosting) {
+//     return early_stop_ == config.pred_early_stop &&
+//       early_stop_freq_ == config.pred_early_stop_freq &&
+//       early_stop_margin_ == config.pred_early_stop_margin &&
+//       iter_ == iter &&
+//       num_total_model_ == boosting->NumberOfTotalModel();
+//   }
+//
+//  private:
+//   std::unique_ptr<Predictor> predictor_;
+//   bool early_stop_;
+//   int early_stop_freq_;
+//   double early_stop_margin_;
+//   int iter_;
+//   int num_total_model_;
+// };
 
 class Booster {
  public:
