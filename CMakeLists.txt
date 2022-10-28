@@ -411,7 +411,8 @@ endif()
 
 add_library(lightgbm_objs OBJECT ${SOURCES})
 
-add_executable(lightgbm src/main.cpp src/application/application.cpp)
+# add_executable(lightgbm src/main.cpp src/application/application.cpp)
+add_executable(lightgbm src/main.cpp)
 target_link_libraries(lightgbm PRIVATE lightgbm_objs)
 
 set(API_SOURCES "src/c_api.cpp")
