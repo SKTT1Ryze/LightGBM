@@ -1748,20 +1748,20 @@ int LGBM_BoosterLoadModelFromString(
   API_END();
 }
 
-int LGBM_BoosterGetLoadedParam(
-  BoosterHandle handle,
-  int64_t buffer_len,
-  int64_t* out_len,
-  char* out_str) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  std::string params = ref_booster->GetBoosting()->GetLoadedParam();
-  *out_len = static_cast<int64_t>(params.size()) + 1;
-  if (*out_len <= buffer_len) {
-    std::memcpy(out_str, params.c_str(), *out_len);
-  }
-  API_END();
-}
+// int LGBM_BoosterGetLoadedParam(
+//   BoosterHandle handle,
+//   int64_t buffer_len,
+//   int64_t* out_len,
+//   char* out_str) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   std::string params = ref_booster->GetBoosting()->GetLoadedParam();
+//   *out_len = static_cast<int64_t>(params.size()) + 1;
+//   if (*out_len <= buffer_len) {
+//     std::memcpy(out_str, params.c_str(), *out_len);
+//   }
+//   API_END();
+// }
 
 #ifdef _MSC_VER
   #pragma warning(disable : 4702)
@@ -1772,12 +1772,12 @@ int LGBM_BoosterFree(BoosterHandle handle) {
   API_END();
 }
 
-int LGBM_BoosterShuffleModels(BoosterHandle handle, int start_iter, int end_iter) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->ShuffleModels(start_iter, end_iter);
-  API_END();
-}
+// int LGBM_BoosterShuffleModels(BoosterHandle handle, int start_iter, int end_iter) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->ShuffleModels(start_iter, end_iter);
+//   API_END();
+// }
 
 // int LGBM_BoosterMerge(BoosterHandle handle,
 //                       BoosterHandle other_handle) {
@@ -1813,23 +1813,23 @@ int LGBM_BoosterShuffleModels(BoosterHandle handle, int start_iter, int end_iter
 //   API_END();
 // }
 
-int LGBM_BoosterGetNumClasses(BoosterHandle handle, int* out_len) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = ref_booster->GetBoosting()->NumberOfClasses();
-  API_END();
-}
+// int LGBM_BoosterGetNumClasses(BoosterHandle handle, int* out_len) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = ref_booster->GetBoosting()->NumberOfClasses();
+//   API_END();
+// }
 
-int LGBM_BoosterGetLinear(BoosterHandle handle, int* out) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  if (ref_booster->GetBoosting()->IsLinear()) {
-    *out = 1;
-  } else {
-    *out = 0;
-  }
-  API_END();
-}
+// int LGBM_BoosterGetLinear(BoosterHandle handle, int* out) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   if (ref_booster->GetBoosting()->IsLinear()) {
+//     *out = 1;
+//   } else {
+//     *out = 0;
+//   }
+//   API_END();
+// }
 
 // int LGBM_BoosterRefit(BoosterHandle handle, const int32_t* leaf_preds, int32_t nrow, int32_t ncol) {
 //   API_BEGIN();
@@ -1878,88 +1878,88 @@ int LGBM_BoosterGetLinear(BoosterHandle handle, int* out) {
 //   API_END();
 // }
 
-int LGBM_BoosterGetCurrentIteration(BoosterHandle handle, int* out_iteration) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_iteration = ref_booster->GetBoosting()->GetCurrentIteration();
-  API_END();
-}
+// int LGBM_BoosterGetCurrentIteration(BoosterHandle handle, int* out_iteration) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_iteration = ref_booster->GetBoosting()->GetCurrentIteration();
+//   API_END();
+// }
 
-int LGBM_BoosterNumModelPerIteration(BoosterHandle handle, int* out_tree_per_iteration) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_tree_per_iteration = ref_booster->GetBoosting()->NumModelPerIteration();
-  API_END();
-}
+// int LGBM_BoosterNumModelPerIteration(BoosterHandle handle, int* out_tree_per_iteration) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_tree_per_iteration = ref_booster->GetBoosting()->NumModelPerIteration();
+//   API_END();
+// }
 
-int LGBM_BoosterNumberOfTotalModel(BoosterHandle handle, int* out_models) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_models = ref_booster->GetBoosting()->NumberOfTotalModel();
-  API_END();
-}
+// int LGBM_BoosterNumberOfTotalModel(BoosterHandle handle, int* out_models) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_models = ref_booster->GetBoosting()->NumberOfTotalModel();
+//   API_END();
+// }
 
-int LGBM_BoosterGetEvalCounts(BoosterHandle handle, int* out_len) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = ref_booster->GetEvalCounts();
-  API_END();
-}
+// int LGBM_BoosterGetEvalCounts(BoosterHandle handle, int* out_len) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = ref_booster->GetEvalCounts();
+//   API_END();
+// }
 
-int LGBM_BoosterGetEvalNames(BoosterHandle handle,
-                             const int len,
-                             int* out_len,
-                             const size_t buffer_len,
-                             size_t* out_buffer_len,
-                             char** out_strs) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = ref_booster->GetEvalNames(out_strs, len, buffer_len, out_buffer_len);
-  API_END();
-}
+// int LGBM_BoosterGetEvalNames(BoosterHandle handle,
+//                              const int len,
+//                              int* out_len,
+//                              const size_t buffer_len,
+//                              size_t* out_buffer_len,
+//                              char** out_strs) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = ref_booster->GetEvalNames(out_strs, len, buffer_len, out_buffer_len);
+//   API_END();
+// }
 
-int LGBM_BoosterGetFeatureNames(BoosterHandle handle,
-                                const int len,
-                                int* out_len,
-                                const size_t buffer_len,
-                                size_t* out_buffer_len,
-                                char** out_strs) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = ref_booster->GetFeatureNames(out_strs, len, buffer_len, out_buffer_len);
-  API_END();
-}
+// int LGBM_BoosterGetFeatureNames(BoosterHandle handle,
+//                                 const int len,
+//                                 int* out_len,
+//                                 const size_t buffer_len,
+//                                 size_t* out_buffer_len,
+//                                 char** out_strs) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = ref_booster->GetFeatureNames(out_strs, len, buffer_len, out_buffer_len);
+//   API_END();
+// }
 
-int LGBM_BoosterGetNumFeature(BoosterHandle handle, int* out_len) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = ref_booster->GetBoosting()->MaxFeatureIdx() + 1;
-  API_END();
-}
+// int LGBM_BoosterGetNumFeature(BoosterHandle handle, int* out_len) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = ref_booster->GetBoosting()->MaxFeatureIdx() + 1;
+//   API_END();
+// }
 
-int LGBM_BoosterGetEval(BoosterHandle handle,
-                        int data_idx,
-                        int* out_len,
-                        double* out_results) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto boosting = ref_booster->GetBoosting();
-  auto result_buf = boosting->GetEvalAt(data_idx);
-  *out_len = static_cast<int>(result_buf.size());
-  for (size_t i = 0; i < result_buf.size(); ++i) {
-    (out_results)[i] = static_cast<double>(result_buf[i]);
-  }
-  API_END();
-}
+// int LGBM_BoosterGetEval(BoosterHandle handle,
+//                         int data_idx,
+//                         int* out_len,
+//                         double* out_results) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto boosting = ref_booster->GetBoosting();
+//   auto result_buf = boosting->GetEvalAt(data_idx);
+//   *out_len = static_cast<int>(result_buf.size());
+//   for (size_t i = 0; i < result_buf.size(); ++i) {
+//     (out_results)[i] = static_cast<double>(result_buf[i]);
+//   }
+//   API_END();
+// }
 
-int LGBM_BoosterGetNumPredict(BoosterHandle handle,
-                              int data_idx,
-                              int64_t* out_len) {
-  API_BEGIN();
-  auto boosting = reinterpret_cast<Booster*>(handle)->GetBoosting();
-  *out_len = boosting->GetNumPredictAt(data_idx);
-  API_END();
-}
+// int LGBM_BoosterGetNumPredict(BoosterHandle handle,
+//                               int data_idx,
+//                               int64_t* out_len) {
+//   API_BEGIN();
+//   auto boosting = reinterpret_cast<Booster*>(handle)->GetBoosting();
+//   *out_len = boosting->GetNumPredictAt(data_idx);
+//   API_END();
+// }
 
 int LGBM_BoosterGetPredict(BoosterHandle handle,
                            int data_idx,
@@ -1971,37 +1971,37 @@ int LGBM_BoosterGetPredict(BoosterHandle handle,
   API_END();
 }
 
-int LGBM_BoosterPredictForFile(BoosterHandle handle,
-                               const char* data_filename,
-                               int data_has_header,
-                               int predict_type,
-                               int start_iteration,
-                               int num_iteration,
-                               const char* parameter,
-                               const char* result_filename) {
-  API_BEGIN();
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->Predict(start_iteration, num_iteration, predict_type, data_filename, data_has_header,
-                       config, result_filename);
-  API_END();
-}
+// int LGBM_BoosterPredictForFile(BoosterHandle handle,
+//                                const char* data_filename,
+//                                int data_has_header,
+//                                int predict_type,
+//                                int start_iteration,
+//                                int num_iteration,
+//                                const char* parameter,
+//                                const char* result_filename) {
+//   API_BEGIN();
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->Predict(start_iteration, num_iteration, predict_type, data_filename, data_has_header,
+//                        config, result_filename);
+//   API_END();
+// }
 
-int LGBM_BoosterCalcNumPredict(BoosterHandle handle,
-                               int num_row,
-                               int predict_type,
-                               int start_iteration,
-                               int num_iteration,
-                               int64_t* out_len) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_len = static_cast<int64_t>(num_row) * ref_booster->GetBoosting()->NumPredictOneRow(start_iteration,
-    num_iteration, predict_type == C_API_PREDICT_LEAF_INDEX, predict_type == C_API_PREDICT_CONTRIB);
-  API_END();
-}
+// int LGBM_BoosterCalcNumPredict(BoosterHandle handle,
+//                                int num_row,
+//                                int predict_type,
+//                                int start_iteration,
+//                                int num_iteration,
+//                                int64_t* out_len) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_len = static_cast<int64_t>(num_row) * ref_booster->GetBoosting()->NumPredictOneRow(start_iteration,
+//     num_iteration, predict_type == C_API_PREDICT_LEAF_INDEX, predict_type == C_API_PREDICT_CONTRIB);
+//   API_END();
+// }
 
 /*!
  * \brief Object to store resources meant for single-row Fast Predict methods.
@@ -2013,531 +2013,531 @@ int LGBM_BoosterCalcNumPredict(BoosterHandle handle,
  * address all the time. One just replaces the feature values at that address
  * and scores again with the *Fast* methods.
  */
-struct FastConfig {
-  FastConfig(Booster *const booster_ptr,
-             const char *parameter,
-             const int predict_type_,
-             const int data_type_,
-             const int32_t num_cols) : booster(booster_ptr), predict_type(predict_type_), data_type(data_type_), ncol(num_cols) {
-    config.Set(Config::Str2Map(parameter));
-  }
-
-  Booster* const booster;
-  Config config;
-  const int predict_type;
-  const int data_type;
-  const int32_t ncol;
-};
-
-int LGBM_FastConfigFree(FastConfigHandle fastConfig) {
-  API_BEGIN();
-  delete reinterpret_cast<FastConfig*>(fastConfig);
-  API_END();
-}
-
-int LGBM_BoosterPredictForCSR(BoosterHandle handle,
-                              const void* indptr,
-                              int indptr_type,
-                              const int32_t* indices,
-                              const void* data,
-                              int data_type,
-                              int64_t nindptr,
-                              int64_t nelem,
-                              int64_t num_col,
-                              int predict_type,
-                              int start_iteration,
-                              int num_iteration,
-                              const char* parameter,
-                              int64_t* out_len,
-                              double* out_result) {
-  API_BEGIN();
-  if (num_col <= 0) {
-    Log::Fatal("The number of columns should be greater than zero.");
-  } else if (num_col >= INT32_MAX) {
-    Log::Fatal("The number of columns should be smaller than INT32_MAX.");
-  }
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
-  int nrow = static_cast<int>(nindptr - 1);
-  ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, static_cast<int>(num_col), get_row_fun,
-                       config, out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterPredictSparseOutput(BoosterHandle handle,
-                                    const void* indptr,
-                                    int indptr_type,
-                                    const int32_t* indices,
-                                    const void* data,
-                                    int data_type,
-                                    int64_t nindptr,
-                                    int64_t nelem,
-                                    int64_t num_col_or_row,
-                                    int predict_type,
-                                    int start_iteration,
-                                    int num_iteration,
-                                    const char* parameter,
-                                    int matrix_type,
-                                    int64_t* out_len,
-                                    void** out_indptr,
-                                    int32_t** out_indices,
-                                    void** out_data) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  if (matrix_type == C_API_MATRIX_TYPE_CSR) {
-    if (num_col_or_row <= 0) {
-      Log::Fatal("The number of columns should be greater than zero.");
-    } else if (num_col_or_row >= INT32_MAX) {
-      Log::Fatal("The number of columns should be smaller than INT32_MAX.");
-    }
-    auto get_row_fun = RowFunctionFromCSR<int64_t>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
-    int64_t nrow = nindptr - 1;
-    ref_booster->PredictSparseCSR(start_iteration, num_iteration, predict_type, nrow, static_cast<int>(num_col_or_row), get_row_fun,
-                                  config, out_len, out_indptr, indptr_type, out_indices, out_data, data_type);
-  } else if (matrix_type == C_API_MATRIX_TYPE_CSC) {
-    int num_threads = OMP_NUM_THREADS();
-    int ncol = static_cast<int>(nindptr - 1);
-    std::vector<std::vector<CSC_RowIterator>> iterators(num_threads, std::vector<CSC_RowIterator>());
-    for (int i = 0; i < num_threads; ++i) {
-      for (int j = 0; j < ncol; ++j) {
-        iterators[i].emplace_back(indptr, indptr_type, indices, data, data_type, nindptr, nelem, j);
-      }
-    }
-    std::function<std::vector<std::pair<int, double>>(int64_t row_idx)> get_row_fun =
-      [&iterators, ncol](int64_t i) {
-      std::vector<std::pair<int, double>> one_row;
-      one_row.reserve(ncol);
-      const int tid = omp_get_thread_num();
-      for (int j = 0; j < ncol; ++j) {
-        auto val = iterators[tid][j].Get(static_cast<int>(i));
-        if (std::fabs(val) > kZeroThreshold || std::isnan(val)) {
-          one_row.emplace_back(j, val);
-        }
-      }
-      return one_row;
-    };
-    ref_booster->PredictSparseCSC(start_iteration, num_iteration, predict_type, num_col_or_row, ncol, get_row_fun, config,
-                                  out_len, out_indptr, indptr_type, out_indices, out_data, data_type);
-  } else {
-    Log::Fatal("Unknown matrix type in LGBM_BoosterPredictSparseOutput");
-  }
-  API_END();
-}
-
-int LGBM_BoosterFreePredictSparse(void* indptr, int32_t* indices, void* data, int indptr_type, int data_type) {
-  API_BEGIN();
-  if (indptr_type == C_API_DTYPE_INT32) {
-    delete[] reinterpret_cast<int32_t*>(indptr);
-  } else if (indptr_type == C_API_DTYPE_INT64) {
-    delete[] reinterpret_cast<int64_t*>(indptr);
-  } else {
-    Log::Fatal("Unknown indptr type in LGBM_BoosterFreePredictSparse");
-  }
-  delete[] indices;
-  if (data_type == C_API_DTYPE_FLOAT32) {
-    delete[] reinterpret_cast<float*>(data);
-  } else if (data_type == C_API_DTYPE_FLOAT64) {
-    delete[] reinterpret_cast<double*>(data);
-  } else {
-    Log::Fatal("Unknown data type in LGBM_BoosterFreePredictSparse");
-  }
-  API_END();
-}
-
-int LGBM_BoosterPredictForCSRSingleRow(BoosterHandle handle,
-                                       const void* indptr,
-                                       int indptr_type,
-                                       const int32_t* indices,
-                                       const void* data,
-                                       int data_type,
-                                       int64_t nindptr,
-                                       int64_t nelem,
-                                       int64_t num_col,
-                                       int predict_type,
-                                       int start_iteration,
-                                       int num_iteration,
-                                       const char* parameter,
-                                       int64_t* out_len,
-                                       double* out_result) {
-  API_BEGIN();
-  if (num_col <= 0) {
-    Log::Fatal("The number of columns should be greater than zero.");
-  } else if (num_col >= INT32_MAX) {
-    Log::Fatal("The number of columns should be smaller than INT32_MAX.");
-  }
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
-  ref_booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, config);
-  ref_booster->PredictSingleRow(predict_type, static_cast<int32_t>(num_col), get_row_fun, config, out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterPredictForCSRSingleRowFastInit(BoosterHandle handle,
-                                               const int predict_type,
-                                               const int start_iteration,
-                                               const int num_iteration,
-                                               const int data_type,
-                                               const int64_t num_col,
-                                               const char* parameter,
-                                               FastConfigHandle *out_fastConfig) {
-  API_BEGIN();
-  if (num_col <= 0) {
-    Log::Fatal("The number of columns should be greater than zero.");
-  } else if (num_col >= INT32_MAX) {
-    Log::Fatal("The number of columns should be smaller than INT32_MAX.");
-  }
-
-  auto fastConfig_ptr = std::unique_ptr<FastConfig>(new FastConfig(
-    reinterpret_cast<Booster*>(handle),
-    parameter,
-    predict_type,
-    data_type,
-    static_cast<int32_t>(num_col)));
-
-  OMP_SET_NUM_THREADS(fastConfig_ptr->config.num_threads);
-
-  fastConfig_ptr->booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, fastConfig_ptr->config);
-
-  *out_fastConfig = fastConfig_ptr.release();
-  API_END();
-}
-
-int LGBM_BoosterPredictForCSRSingleRowFast(FastConfigHandle fastConfig_handle,
-                                           const void* indptr,
-                                           const int indptr_type,
-                                           const int32_t* indices,
-                                           const void* data,
-                                           const int64_t nindptr,
-                                           const int64_t nelem,
-                                           int64_t* out_len,
-                                           double* out_result) {
-  API_BEGIN();
-  FastConfig *fastConfig = reinterpret_cast<FastConfig*>(fastConfig_handle);
-  auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, fastConfig->data_type, nindptr, nelem);
-  fastConfig->booster->PredictSingleRow(fastConfig->predict_type, fastConfig->ncol,
-                                        get_row_fun, fastConfig->config, out_result, out_len);
-  API_END();
-}
-
-
-int LGBM_BoosterPredictForCSC(BoosterHandle handle,
-                              const void* col_ptr,
-                              int col_ptr_type,
-                              const int32_t* indices,
-                              const void* data,
-                              int data_type,
-                              int64_t ncol_ptr,
-                              int64_t nelem,
-                              int64_t num_row,
-                              int predict_type,
-                              int start_iteration,
-                              int num_iteration,
-                              const char* parameter,
-                              int64_t* out_len,
-                              double* out_result) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  int num_threads = OMP_NUM_THREADS();
-  int ncol = static_cast<int>(ncol_ptr - 1);
-  std::vector<std::vector<CSC_RowIterator>> iterators(num_threads, std::vector<CSC_RowIterator>());
-  for (int i = 0; i < num_threads; ++i) {
-    for (int j = 0; j < ncol; ++j) {
-      iterators[i].emplace_back(col_ptr, col_ptr_type, indices, data, data_type, ncol_ptr, nelem, j);
-    }
-  }
-  std::function<std::vector<std::pair<int, double>>(int row_idx)> get_row_fun =
-      [&iterators, ncol](int i) {
-        std::vector<std::pair<int, double>> one_row;
-        one_row.reserve(ncol);
-        const int tid = omp_get_thread_num();
-        for (int j = 0; j < ncol; ++j) {
-          auto val = iterators[tid][j].Get(i);
-          if (std::fabs(val) > kZeroThreshold || std::isnan(val)) {
-            one_row.emplace_back(j, val);
-          }
-        }
-        return one_row;
-      };
-  ref_booster->Predict(start_iteration, num_iteration, predict_type, static_cast<int>(num_row), ncol, get_row_fun, config,
-                       out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterValidateFeatureNames(BoosterHandle handle,
-                                     const char** data_names,
-                                     int data_num_features) {
-  API_BEGIN();
-  int booster_num_features;
-  size_t out_buffer_len;
-  LGBM_BoosterGetFeatureNames(handle, 0, &booster_num_features, 0, &out_buffer_len, nullptr);
-  if (booster_num_features != data_num_features) {
-    Log::Fatal("Model was trained on %d features, but got %d input features to predict.", booster_num_features, data_num_features);
-  }
-  std::vector<std::vector<char>> tmp_names(booster_num_features, std::vector<char>(out_buffer_len));
-  std::vector<char*> booster_names = Vector2Ptr(&tmp_names);
-  LGBM_BoosterGetFeatureNames(handle, data_num_features, &booster_num_features, out_buffer_len, &out_buffer_len, booster_names.data());
-  for (int i = 0; i < booster_num_features; ++i) {
-    if (strcmp(data_names[i], booster_names[i]) != 0) {
-      Log::Fatal("Expected '%s' at position %d but found '%s'", booster_names[i], i, data_names[i]);
-    }
-  }
-  API_END();
-}
-
-int LGBM_BoosterPredictForMat(BoosterHandle handle,
-                              const void* data,
-                              int data_type,
-                              int32_t nrow,
-                              int32_t ncol,
-                              int is_row_major,
-                              int predict_type,
-                              int start_iteration,
-                              int num_iteration,
-                              const char* parameter,
-                              int64_t* out_len,
-                              double* out_result) {
-  API_BEGIN();
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto get_row_fun = RowPairFunctionFromDenseMatric(data, nrow, ncol, data_type, is_row_major);
-  ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, ncol, get_row_fun,
-                       config, out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterPredictForMatSingleRow(BoosterHandle handle,
-                                       const void* data,
-                                       int data_type,
-                                       int32_t ncol,
-                                       int is_row_major,
-                                       int predict_type,
-                                       int start_iteration,
-                                       int num_iteration,
-                                       const char* parameter,
-                                       int64_t* out_len,
-                                       double* out_result) {
-  API_BEGIN();
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto get_row_fun = RowPairFunctionFromDenseMatric(data, 1, ncol, data_type, is_row_major);
-  ref_booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, config);
-  ref_booster->PredictSingleRow(predict_type, ncol, get_row_fun, config, out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterPredictForMatSingleRowFastInit(BoosterHandle handle,
-                                               const int predict_type,
-                                               const int start_iteration,
-                                               const int num_iteration,
-                                               const int data_type,
-                                               const int32_t ncol,
-                                               const char* parameter,
-                                               FastConfigHandle *out_fastConfig) {
-  API_BEGIN();
-  auto fastConfig_ptr = std::unique_ptr<FastConfig>(new FastConfig(
-    reinterpret_cast<Booster*>(handle),
-    parameter,
-    predict_type,
-    data_type,
-    ncol));
-
-  OMP_SET_NUM_THREADS(fastConfig_ptr->config.num_threads);
-
-  fastConfig_ptr->booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, fastConfig_ptr->config);
-
-  *out_fastConfig = fastConfig_ptr.release();
-  API_END();
-}
-
-int LGBM_BoosterPredictForMatSingleRowFast(FastConfigHandle fastConfig_handle,
-                                           const void* data,
-                                           int64_t* out_len,
-                                           double* out_result) {
-  API_BEGIN();
-  FastConfig *fastConfig = reinterpret_cast<FastConfig*>(fastConfig_handle);
-  // Single row in row-major format:
-  auto get_row_fun = RowPairFunctionFromDenseMatric(data, 1, fastConfig->ncol, fastConfig->data_type, 1);
-  fastConfig->booster->PredictSingleRow(fastConfig->predict_type, fastConfig->ncol,
-                                        get_row_fun, fastConfig->config,
-                                        out_result, out_len);
-  API_END();
-}
-
-
-int LGBM_BoosterPredictForMats(BoosterHandle handle,
-                               const void** data,
-                               int data_type,
-                               int32_t nrow,
-                               int32_t ncol,
-                               int predict_type,
-                               int start_iteration,
-                               int num_iteration,
-                               const char* parameter,
-                               int64_t* out_len,
-                               double* out_result) {
-  API_BEGIN();
-  auto param = Config::Str2Map(parameter);
-  Config config;
-  config.Set(param);
-  OMP_SET_NUM_THREADS(config.num_threads);
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  auto get_row_fun = RowPairFunctionFromDenseRows(data, ncol, data_type);
-  ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, ncol, get_row_fun, config, out_result, out_len);
-  API_END();
-}
-
-int LGBM_BoosterSaveModel(BoosterHandle handle,
-                          int start_iteration,
-                          int num_iteration,
-                          int feature_importance_type,
-                          const char* filename) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->SaveModelToFile(start_iteration, num_iteration,
-                               feature_importance_type, filename);
-  API_END();
-}
-
-int LGBM_BoosterSaveModelToString(BoosterHandle handle,
-                                  int start_iteration,
-                                  int num_iteration,
-                                  int feature_importance_type,
-                                  int64_t buffer_len,
-                                  int64_t* out_len,
-                                  char* out_str) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  std::string model = ref_booster->SaveModelToString(
-      start_iteration, num_iteration, feature_importance_type);
-  *out_len = static_cast<int64_t>(model.size()) + 1;
-  if (*out_len <= buffer_len) {
-    std::memcpy(out_str, model.c_str(), *out_len);
-  }
-  API_END();
-}
-
-int LGBM_BoosterDumpModel(BoosterHandle handle,
-                          int start_iteration,
-                          int num_iteration,
-                          int feature_importance_type,
-                          int64_t buffer_len,
-                          int64_t* out_len,
-                          char* out_str) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  std::string model = ref_booster->DumpModel(start_iteration, num_iteration,
-                                             feature_importance_type);
-  *out_len = static_cast<int64_t>(model.size()) + 1;
-  if (*out_len <= buffer_len) {
-    std::memcpy(out_str, model.c_str(), *out_len);
-  }
-  API_END();
-}
-
-int LGBM_BoosterGetLeafValue(BoosterHandle handle,
-                             int tree_idx,
-                             int leaf_idx,
-                             double* out_val) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  *out_val = static_cast<double>(ref_booster->GetLeafValue(tree_idx, leaf_idx));
-  API_END();
-}
-
-int LGBM_BoosterSetLeafValue(BoosterHandle handle,
-                             int tree_idx,
-                             int leaf_idx,
-                             double val) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->SetLeafValue(tree_idx, leaf_idx, val);
-  API_END();
-}
-
-int LGBM_BoosterFeatureImportance(BoosterHandle handle,
-                                  int num_iteration,
-                                  int importance_type,
-                                  double* out_results) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  std::vector<double> feature_importances = ref_booster->FeatureImportance(num_iteration, importance_type);
-  for (size_t i = 0; i < feature_importances.size(); ++i) {
-    (out_results)[i] = feature_importances[i];
-  }
-  API_END();
-}
-
-int LGBM_BoosterGetUpperBoundValue(BoosterHandle handle,
-                                   double* out_results) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  double max_value = ref_booster->UpperBoundValue();
-  *out_results = max_value;
-  API_END();
-}
-
-int LGBM_BoosterGetLowerBoundValue(BoosterHandle handle,
-                                   double* out_results) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  double min_value = ref_booster->LowerBoundValue();
-  *out_results = min_value;
-  API_END();
-}
-
-int LGBM_NetworkInit(const char* machines,
-                     int local_listen_port,
-                     int listen_time_out,
-                     int num_machines) {
-  API_BEGIN();
-  Config config;
-  config.machines = RemoveQuotationSymbol(std::string(machines));
-  config.local_listen_port = local_listen_port;
-  config.num_machines = num_machines;
-  config.time_out = listen_time_out;
-  if (num_machines > 1) {
-    Network::Init(config);
-  }
-  API_END();
-}
-
-int LGBM_NetworkFree() {
-  API_BEGIN();
-  Network::Dispose();
-  API_END();
-}
-
-int LGBM_NetworkInitWithFunctions(int num_machines, int rank,
-                                  void* reduce_scatter_ext_fun,
-                                  void* allgather_ext_fun) {
-  API_BEGIN();
-  if (num_machines > 1) {
-    Network::Init(num_machines, rank, (ReduceScatterFunction)reduce_scatter_ext_fun, (AllgatherFunction)allgather_ext_fun);
-  }
-  API_END();
-}
+// struct FastConfig {
+//   FastConfig(Booster *const booster_ptr,
+//              const char *parameter,
+//              const int predict_type_,
+//              const int data_type_,
+//              const int32_t num_cols) : booster(booster_ptr), predict_type(predict_type_), data_type(data_type_), ncol(num_cols) {
+//     config.Set(Config::Str2Map(parameter));
+//   }
+//
+//   Booster* const booster;
+//   Config config;
+//   const int predict_type;
+//   const int data_type;
+//   const int32_t ncol;
+// };
+//
+// int LGBM_FastConfigFree(FastConfigHandle fastConfig) {
+//   API_BEGIN();
+//   delete reinterpret_cast<FastConfig*>(fastConfig);
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForCSR(BoosterHandle handle,
+//                               const void* indptr,
+//                               int indptr_type,
+//                               const int32_t* indices,
+//                               const void* data,
+//                               int data_type,
+//                               int64_t nindptr,
+//                               int64_t nelem,
+//                               int64_t num_col,
+//                               int predict_type,
+//                               int start_iteration,
+//                               int num_iteration,
+//                               const char* parameter,
+//                               int64_t* out_len,
+//                               double* out_result) {
+//   API_BEGIN();
+//   if (num_col <= 0) {
+//     Log::Fatal("The number of columns should be greater than zero.");
+//   } else if (num_col >= INT32_MAX) {
+//     Log::Fatal("The number of columns should be smaller than INT32_MAX.");
+//   }
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
+//   int nrow = static_cast<int>(nindptr - 1);
+//   ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, static_cast<int>(num_col), get_row_fun,
+//                        config, out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictSparseOutput(BoosterHandle handle,
+//                                     const void* indptr,
+//                                     int indptr_type,
+//                                     const int32_t* indices,
+//                                     const void* data,
+//                                     int data_type,
+//                                     int64_t nindptr,
+//                                     int64_t nelem,
+//                                     int64_t num_col_or_row,
+//                                     int predict_type,
+//                                     int start_iteration,
+//                                     int num_iteration,
+//                                     const char* parameter,
+//                                     int matrix_type,
+//                                     int64_t* out_len,
+//                                     void** out_indptr,
+//                                     int32_t** out_indices,
+//                                     void** out_data) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   if (matrix_type == C_API_MATRIX_TYPE_CSR) {
+//     if (num_col_or_row <= 0) {
+//       Log::Fatal("The number of columns should be greater than zero.");
+//     } else if (num_col_or_row >= INT32_MAX) {
+//       Log::Fatal("The number of columns should be smaller than INT32_MAX.");
+//     }
+//     auto get_row_fun = RowFunctionFromCSR<int64_t>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
+//     int64_t nrow = nindptr - 1;
+//     ref_booster->PredictSparseCSR(start_iteration, num_iteration, predict_type, nrow, static_cast<int>(num_col_or_row), get_row_fun,
+//                                   config, out_len, out_indptr, indptr_type, out_indices, out_data, data_type);
+//   } else if (matrix_type == C_API_MATRIX_TYPE_CSC) {
+//     int num_threads = OMP_NUM_THREADS();
+//     int ncol = static_cast<int>(nindptr - 1);
+//     std::vector<std::vector<CSC_RowIterator>> iterators(num_threads, std::vector<CSC_RowIterator>());
+//     for (int i = 0; i < num_threads; ++i) {
+//       for (int j = 0; j < ncol; ++j) {
+//         iterators[i].emplace_back(indptr, indptr_type, indices, data, data_type, nindptr, nelem, j);
+//       }
+//     }
+//     std::function<std::vector<std::pair<int, double>>(int64_t row_idx)> get_row_fun =
+//       [&iterators, ncol](int64_t i) {
+//       std::vector<std::pair<int, double>> one_row;
+//       one_row.reserve(ncol);
+//       const int tid = omp_get_thread_num();
+//       for (int j = 0; j < ncol; ++j) {
+//         auto val = iterators[tid][j].Get(static_cast<int>(i));
+//         if (std::fabs(val) > kZeroThreshold || std::isnan(val)) {
+//           one_row.emplace_back(j, val);
+//         }
+//       }
+//       return one_row;
+//     };
+//     ref_booster->PredictSparseCSC(start_iteration, num_iteration, predict_type, num_col_or_row, ncol, get_row_fun, config,
+//                                   out_len, out_indptr, indptr_type, out_indices, out_data, data_type);
+//   } else {
+//     Log::Fatal("Unknown matrix type in LGBM_BoosterPredictSparseOutput");
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterFreePredictSparse(void* indptr, int32_t* indices, void* data, int indptr_type, int data_type) {
+//   API_BEGIN();
+//   if (indptr_type == C_API_DTYPE_INT32) {
+//     delete[] reinterpret_cast<int32_t*>(indptr);
+//   } else if (indptr_type == C_API_DTYPE_INT64) {
+//     delete[] reinterpret_cast<int64_t*>(indptr);
+//   } else {
+//     Log::Fatal("Unknown indptr type in LGBM_BoosterFreePredictSparse");
+//   }
+//   delete[] indices;
+//   if (data_type == C_API_DTYPE_FLOAT32) {
+//     delete[] reinterpret_cast<float*>(data);
+//   } else if (data_type == C_API_DTYPE_FLOAT64) {
+//     delete[] reinterpret_cast<double*>(data);
+//   } else {
+//     Log::Fatal("Unknown data type in LGBM_BoosterFreePredictSparse");
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForCSRSingleRow(BoosterHandle handle,
+//                                        const void* indptr,
+//                                        int indptr_type,
+//                                        const int32_t* indices,
+//                                        const void* data,
+//                                        int data_type,
+//                                        int64_t nindptr,
+//                                        int64_t nelem,
+//                                        int64_t num_col,
+//                                        int predict_type,
+//                                        int start_iteration,
+//                                        int num_iteration,
+//                                        const char* parameter,
+//                                        int64_t* out_len,
+//                                        double* out_result) {
+//   API_BEGIN();
+//   if (num_col <= 0) {
+//     Log::Fatal("The number of columns should be greater than zero.");
+//   } else if (num_col >= INT32_MAX) {
+//     Log::Fatal("The number of columns should be smaller than INT32_MAX.");
+//   }
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, data_type, nindptr, nelem);
+//   ref_booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, config);
+//   ref_booster->PredictSingleRow(predict_type, static_cast<int32_t>(num_col), get_row_fun, config, out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForCSRSingleRowFastInit(BoosterHandle handle,
+//                                                const int predict_type,
+//                                                const int start_iteration,
+//                                                const int num_iteration,
+//                                                const int data_type,
+//                                                const int64_t num_col,
+//                                                const char* parameter,
+//                                                FastConfigHandle *out_fastConfig) {
+//   API_BEGIN();
+//   if (num_col <= 0) {
+//     Log::Fatal("The number of columns should be greater than zero.");
+//   } else if (num_col >= INT32_MAX) {
+//     Log::Fatal("The number of columns should be smaller than INT32_MAX.");
+//   }
+//
+//   auto fastConfig_ptr = std::unique_ptr<FastConfig>(new FastConfig(
+//     reinterpret_cast<Booster*>(handle),
+//     parameter,
+//     predict_type,
+//     data_type,
+//     static_cast<int32_t>(num_col)));
+//
+//   OMP_SET_NUM_THREADS(fastConfig_ptr->config.num_threads);
+//
+//   fastConfig_ptr->booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, fastConfig_ptr->config);
+//
+//   *out_fastConfig = fastConfig_ptr.release();
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForCSRSingleRowFast(FastConfigHandle fastConfig_handle,
+//                                            const void* indptr,
+//                                            const int indptr_type,
+//                                            const int32_t* indices,
+//                                            const void* data,
+//                                            const int64_t nindptr,
+//                                            const int64_t nelem,
+//                                            int64_t* out_len,
+//                                            double* out_result) {
+//   API_BEGIN();
+//   FastConfig *fastConfig = reinterpret_cast<FastConfig*>(fastConfig_handle);
+//   auto get_row_fun = RowFunctionFromCSR<int>(indptr, indptr_type, indices, data, fastConfig->data_type, nindptr, nelem);
+//   fastConfig->booster->PredictSingleRow(fastConfig->predict_type, fastConfig->ncol,
+//                                         get_row_fun, fastConfig->config, out_result, out_len);
+//   API_END();
+// }
+//
+//
+// int LGBM_BoosterPredictForCSC(BoosterHandle handle,
+//                               const void* col_ptr,
+//                               int col_ptr_type,
+//                               const int32_t* indices,
+//                               const void* data,
+//                               int data_type,
+//                               int64_t ncol_ptr,
+//                               int64_t nelem,
+//                               int64_t num_row,
+//                               int predict_type,
+//                               int start_iteration,
+//                               int num_iteration,
+//                               const char* parameter,
+//                               int64_t* out_len,
+//                               double* out_result) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   int num_threads = OMP_NUM_THREADS();
+//   int ncol = static_cast<int>(ncol_ptr - 1);
+//   std::vector<std::vector<CSC_RowIterator>> iterators(num_threads, std::vector<CSC_RowIterator>());
+//   for (int i = 0; i < num_threads; ++i) {
+//     for (int j = 0; j < ncol; ++j) {
+//       iterators[i].emplace_back(col_ptr, col_ptr_type, indices, data, data_type, ncol_ptr, nelem, j);
+//     }
+//   }
+//   std::function<std::vector<std::pair<int, double>>(int row_idx)> get_row_fun =
+//       [&iterators, ncol](int i) {
+//         std::vector<std::pair<int, double>> one_row;
+//         one_row.reserve(ncol);
+//         const int tid = omp_get_thread_num();
+//         for (int j = 0; j < ncol; ++j) {
+//           auto val = iterators[tid][j].Get(i);
+//           if (std::fabs(val) > kZeroThreshold || std::isnan(val)) {
+//             one_row.emplace_back(j, val);
+//           }
+//         }
+//         return one_row;
+//       };
+//   ref_booster->Predict(start_iteration, num_iteration, predict_type, static_cast<int>(num_row), ncol, get_row_fun, config,
+//                        out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterValidateFeatureNames(BoosterHandle handle,
+//                                      const char** data_names,
+//                                      int data_num_features) {
+//   API_BEGIN();
+//   int booster_num_features;
+//   size_t out_buffer_len;
+//   LGBM_BoosterGetFeatureNames(handle, 0, &booster_num_features, 0, &out_buffer_len, nullptr);
+//   if (booster_num_features != data_num_features) {
+//     Log::Fatal("Model was trained on %d features, but got %d input features to predict.", booster_num_features, data_num_features);
+//   }
+//   std::vector<std::vector<char>> tmp_names(booster_num_features, std::vector<char>(out_buffer_len));
+//   std::vector<char*> booster_names = Vector2Ptr(&tmp_names);
+//   LGBM_BoosterGetFeatureNames(handle, data_num_features, &booster_num_features, out_buffer_len, &out_buffer_len, booster_names.data());
+//   for (int i = 0; i < booster_num_features; ++i) {
+//     if (strcmp(data_names[i], booster_names[i]) != 0) {
+//       Log::Fatal("Expected '%s' at position %d but found '%s'", booster_names[i], i, data_names[i]);
+//     }
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForMat(BoosterHandle handle,
+//                               const void* data,
+//                               int data_type,
+//                               int32_t nrow,
+//                               int32_t ncol,
+//                               int is_row_major,
+//                               int predict_type,
+//                               int start_iteration,
+//                               int num_iteration,
+//                               const char* parameter,
+//                               int64_t* out_len,
+//                               double* out_result) {
+//   API_BEGIN();
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto get_row_fun = RowPairFunctionFromDenseMatric(data, nrow, ncol, data_type, is_row_major);
+//   ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, ncol, get_row_fun,
+//                        config, out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForMatSingleRow(BoosterHandle handle,
+//                                        const void* data,
+//                                        int data_type,
+//                                        int32_t ncol,
+//                                        int is_row_major,
+//                                        int predict_type,
+//                                        int start_iteration,
+//                                        int num_iteration,
+//                                        const char* parameter,
+//                                        int64_t* out_len,
+//                                        double* out_result) {
+//   API_BEGIN();
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto get_row_fun = RowPairFunctionFromDenseMatric(data, 1, ncol, data_type, is_row_major);
+//   ref_booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, config);
+//   ref_booster->PredictSingleRow(predict_type, ncol, get_row_fun, config, out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForMatSingleRowFastInit(BoosterHandle handle,
+//                                                const int predict_type,
+//                                                const int start_iteration,
+//                                                const int num_iteration,
+//                                                const int data_type,
+//                                                const int32_t ncol,
+//                                                const char* parameter,
+//                                                FastConfigHandle *out_fastConfig) {
+//   API_BEGIN();
+//   auto fastConfig_ptr = std::unique_ptr<FastConfig>(new FastConfig(
+//     reinterpret_cast<Booster*>(handle),
+//     parameter,
+//     predict_type,
+//     data_type,
+//     ncol));
+//
+//   OMP_SET_NUM_THREADS(fastConfig_ptr->config.num_threads);
+//
+//   fastConfig_ptr->booster->SetSingleRowPredictor(start_iteration, num_iteration, predict_type, fastConfig_ptr->config);
+//
+//   *out_fastConfig = fastConfig_ptr.release();
+//   API_END();
+// }
+//
+// int LGBM_BoosterPredictForMatSingleRowFast(FastConfigHandle fastConfig_handle,
+//                                            const void* data,
+//                                            int64_t* out_len,
+//                                            double* out_result) {
+//   API_BEGIN();
+//   FastConfig *fastConfig = reinterpret_cast<FastConfig*>(fastConfig_handle);
+//   // Single row in row-major format:
+//   auto get_row_fun = RowPairFunctionFromDenseMatric(data, 1, fastConfig->ncol, fastConfig->data_type, 1);
+//   fastConfig->booster->PredictSingleRow(fastConfig->predict_type, fastConfig->ncol,
+//                                         get_row_fun, fastConfig->config,
+//                                         out_result, out_len);
+//   API_END();
+// }
+//
+//
+// int LGBM_BoosterPredictForMats(BoosterHandle handle,
+//                                const void** data,
+//                                int data_type,
+//                                int32_t nrow,
+//                                int32_t ncol,
+//                                int predict_type,
+//                                int start_iteration,
+//                                int num_iteration,
+//                                const char* parameter,
+//                                int64_t* out_len,
+//                                double* out_result) {
+//   API_BEGIN();
+//   auto param = Config::Str2Map(parameter);
+//   Config config;
+//   config.Set(param);
+//   OMP_SET_NUM_THREADS(config.num_threads);
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   auto get_row_fun = RowPairFunctionFromDenseRows(data, ncol, data_type);
+//   ref_booster->Predict(start_iteration, num_iteration, predict_type, nrow, ncol, get_row_fun, config, out_result, out_len);
+//   API_END();
+// }
+//
+// int LGBM_BoosterSaveModel(BoosterHandle handle,
+//                           int start_iteration,
+//                           int num_iteration,
+//                           int feature_importance_type,
+//                           const char* filename) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->SaveModelToFile(start_iteration, num_iteration,
+//                                feature_importance_type, filename);
+//   API_END();
+// }
+//
+// int LGBM_BoosterSaveModelToString(BoosterHandle handle,
+//                                   int start_iteration,
+//                                   int num_iteration,
+//                                   int feature_importance_type,
+//                                   int64_t buffer_len,
+//                                   int64_t* out_len,
+//                                   char* out_str) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   std::string model = ref_booster->SaveModelToString(
+//       start_iteration, num_iteration, feature_importance_type);
+//   *out_len = static_cast<int64_t>(model.size()) + 1;
+//   if (*out_len <= buffer_len) {
+//     std::memcpy(out_str, model.c_str(), *out_len);
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterDumpModel(BoosterHandle handle,
+//                           int start_iteration,
+//                           int num_iteration,
+//                           int feature_importance_type,
+//                           int64_t buffer_len,
+//                           int64_t* out_len,
+//                           char* out_str) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   std::string model = ref_booster->DumpModel(start_iteration, num_iteration,
+//                                              feature_importance_type);
+//   *out_len = static_cast<int64_t>(model.size()) + 1;
+//   if (*out_len <= buffer_len) {
+//     std::memcpy(out_str, model.c_str(), *out_len);
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterGetLeafValue(BoosterHandle handle,
+//                              int tree_idx,
+//                              int leaf_idx,
+//                              double* out_val) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   *out_val = static_cast<double>(ref_booster->GetLeafValue(tree_idx, leaf_idx));
+//   API_END();
+// }
+//
+// int LGBM_BoosterSetLeafValue(BoosterHandle handle,
+//                              int tree_idx,
+//                              int leaf_idx,
+//                              double val) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->SetLeafValue(tree_idx, leaf_idx, val);
+//   API_END();
+// }
+//
+// int LGBM_BoosterFeatureImportance(BoosterHandle handle,
+//                                   int num_iteration,
+//                                   int importance_type,
+//                                   double* out_results) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   std::vector<double> feature_importances = ref_booster->FeatureImportance(num_iteration, importance_type);
+//   for (size_t i = 0; i < feature_importances.size(); ++i) {
+//     (out_results)[i] = feature_importances[i];
+//   }
+//   API_END();
+// }
+//
+// int LGBM_BoosterGetUpperBoundValue(BoosterHandle handle,
+//                                    double* out_results) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   double max_value = ref_booster->UpperBoundValue();
+//   *out_results = max_value;
+//   API_END();
+// }
+//
+// int LGBM_BoosterGetLowerBoundValue(BoosterHandle handle,
+//                                    double* out_results) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   double min_value = ref_booster->LowerBoundValue();
+//   *out_results = min_value;
+//   API_END();
+// }
+//
+// int LGBM_NetworkInit(const char* machines,
+//                      int local_listen_port,
+//                      int listen_time_out,
+//                      int num_machines) {
+//   API_BEGIN();
+//   Config config;
+//   config.machines = RemoveQuotationSymbol(std::string(machines));
+//   config.local_listen_port = local_listen_port;
+//   config.num_machines = num_machines;
+//   config.time_out = listen_time_out;
+//   if (num_machines > 1) {
+//     Network::Init(config);
+//   }
+//   API_END();
+// }
+//
+// int LGBM_NetworkFree() {
+//   API_BEGIN();
+//   Network::Dispose();
+//   API_END();
+// }
+//
+// int LGBM_NetworkInitWithFunctions(int num_machines, int rank,
+//                                   void* reduce_scatter_ext_fun,
+//                                   void* allgather_ext_fun) {
+//   API_BEGIN();
+//   if (num_machines > 1) {
+//     Network::Init(num_machines, rank, (ReduceScatterFunction)reduce_scatter_ext_fun, (AllgatherFunction)allgather_ext_fun);
+//   }
+//   API_END();
+// }
 
 // ---- start of some help functions
 
