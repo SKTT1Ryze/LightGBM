@@ -4,10 +4,10 @@
  */
 #include <LightGBM/boosting.h>
 
-#include "dart.hpp"
+// #include "dart.hpp"
 #include "gbdt.h"
-#include "goss.hpp"
-#include "rf.hpp"
+// #include "goss.hpp"
+// #include "rf.hpp"
 
 namespace LightGBM {
 
@@ -36,12 +36,6 @@ Boosting* Boosting::CreateBoosting(const std::string& type, const char* filename
   if (filename == nullptr || filename[0] == '\0') {
     if (type == std::string("gbdt")) {
       return new GBDT();
-    } else if (type == std::string("dart")) {
-      return new DART();
-    } else if (type == std::string("goss")) {
-      return new GOSS();
-    } else if (type == std::string("rf")) {
-      return new RF();
     } else {
       return nullptr;
     }
@@ -50,12 +44,6 @@ Boosting* Boosting::CreateBoosting(const std::string& type, const char* filename
     if (GetBoostingTypeFromModelFile(filename) == std::string("tree")) {
       if (type == std::string("gbdt")) {
         ret.reset(new GBDT());
-      } else if (type == std::string("dart")) {
-        ret.reset(new DART());
-      } else if (type == std::string("goss")) {
-        ret.reset(new GOSS());
-      } else if (type == std::string("rf")) {
-        return new RF();
       } else {
         Log::Fatal("Unknown boosting type %s", type.c_str());
       }
