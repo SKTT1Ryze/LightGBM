@@ -17,7 +17,7 @@ set(
 Supported sanitizers are address, leak, undefined and thread."
 )
 option(BUILD_CPP_TEST "Build C++ tests with Google Test" OFF)
-option(BUILD_STATIC_LIB "Build static library" ON)
+option(BUILD_STATIC_LIB "Build static library" OFF)
 option(__BUILD_FOR_R "Set to ON if building lib_lightgbm for use with the R package" OFF)
 option(__INTEGRATE_OPENCL "Set to ON if building LightGBM with the OpenCL ICD Loader and its dependencies included" OFF)
 
