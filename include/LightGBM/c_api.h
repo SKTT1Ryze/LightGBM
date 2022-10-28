@@ -569,9 +569,9 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterGetLinear(BoosterHandle handle, int* out);
  * \param[out] out Handle of created booster
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterCreate(const DatasetHandle train_data,
-                                         const char* parameters,
-                                         BoosterHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterCreate(const DatasetHandle train_data,
+//                                          const char* parameters,
+//                                          BoosterHandle* out);
 
 /*!
  * \brief Load an existing booster from model file.
@@ -633,8 +633,8 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterShuffleModels(BoosterHandle handle,
  * \param other_handle Other handle of booster
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterMerge(BoosterHandle handle,
-                                        BoosterHandle other_handle);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterMerge(BoosterHandle handle,
+//                                         BoosterHandle other_handle);
 
 /*!
  * \brief Add new validation data to booster.
@@ -642,8 +642,8 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterMerge(BoosterHandle handle,
  * \param valid_data Validation dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterAddValidData(BoosterHandle handle,
-                                               const DatasetHandle valid_data);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterAddValidData(BoosterHandle handle,
+//                                                const DatasetHandle valid_data);
 
 /*!
  * \brief Reset training data for booster.
@@ -651,8 +651,8 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterAddValidData(BoosterHandle handle,
  * \param train_data Training dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterResetTrainingData(BoosterHandle handle,
-                                                    const DatasetHandle train_data);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterResetTrainingData(BoosterHandle handle,
+//                                                     const DatasetHandle train_data);
 
 /*!
  * \brief Reset config for booster.
@@ -660,8 +660,8 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterResetTrainingData(BoosterHandle handle,
  * \param parameters Parameters in format 'key1=value1 key2=value2'
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterResetParameter(BoosterHandle handle,
-                                                 const char* parameters);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterResetParameter(BoosterHandle handle,
+//                                                  const char* parameters);
 
 /*!
  * \brief Get number of classes.
@@ -678,8 +678,8 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterGetNumClasses(BoosterHandle handle,
  * \param[out] is_finished 1 means the update was successfully finished (cannot split any more), 0 indicates failure
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterUpdateOneIter(BoosterHandle handle,
-                                                int* is_finished);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterUpdateOneIter(BoosterHandle handle,
+//                                                 int* is_finished);
 
 /*!
  * \brief Refit the tree model using the new data (online learning).
@@ -689,10 +689,10 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterUpdateOneIter(BoosterHandle handle,
  * \param ncol Number of columns of ``leaf_preds``
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterRefit(BoosterHandle handle,
-                                        const int32_t* leaf_preds,
-                                        int32_t nrow,
-                                        int32_t ncol);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterRefit(BoosterHandle handle,
+//                                         const int32_t* leaf_preds,
+//                                         int32_t nrow,
+//                                         int32_t ncol);
 
 /*!
  * \brief Update the model by specifying gradient and Hessian directly
@@ -706,17 +706,17 @@ LIGHTGBM_C_EXPORT int LGBM_BoosterRefit(BoosterHandle handle,
  * \param[out] is_finished 1 means the update was successfully finished (cannot split any more), 0 indicates failure
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterUpdateOneIterCustom(BoosterHandle handle,
-                                                      const float* grad,
-                                                      const float* hess,
-                                                      int* is_finished);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterUpdateOneIterCustom(BoosterHandle handle,
+//                                                       const float* grad,
+//                                                       const float* hess,
+//                                                       int* is_finished);
 
 /*!
  * \brief Rollback one iteration.
  * \param handle Handle of booster
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_BoosterRollbackOneIter(BoosterHandle handle);
+// LIGHTGBM_C_EXPORT int LGBM_BoosterRollbackOneIter(BoosterHandle handle);
 
 /*!
  * \brief Get index of the current boosting iteration.

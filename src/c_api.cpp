@@ -6,8 +6,8 @@
 
 #include <LightGBM/boosting.h>
 #include <LightGBM/config.h>
-#include <LightGBM/dataset.h>
-#include <LightGBM/dataset_loader.h>
+// #include <LightGBM/dataset.h>
+// #include <LightGBM/dataset_loader.h>
 #include <LightGBM/metric.h>
 #include <LightGBM/network.h>
 #include <LightGBM/objective_function.h>
@@ -109,268 +109,268 @@ class Booster {
     boosting_.reset(Boosting::CreateBoosting("gbdt", filename));
   }
 
-  Booster(const Dataset* train_data,
-          const char* parameters) {
-    auto param = Config::Str2Map(parameters);
-    config_.Set(param);
-    OMP_SET_NUM_THREADS(config_.num_threads);
-    // create boosting
-    if (config_.input_model.size() > 0) {
-      Log::Warning("Continued train from model is not supported for c_api,\n"
-                   "please use continued train with input score");
-    }
+  // Booster(const Dataset* train_data,
+  //         const char* parameters) {
+  //   auto param = Config::Str2Map(parameters);
+  //   config_.Set(param);
+  //   OMP_SET_NUM_THREADS(config_.num_threads);
+  //   // create boosting
+  //   if (config_.input_model.size() > 0) {
+  //     Log::Warning("Continued train from model is not supported for c_api,\n"
+  //                  "please use continued train with input score");
+  //   }
+  //
+  //   boosting_.reset(Boosting::CreateBoosting(config_.boosting, nullptr));
+  //
+  //   train_data_ = train_data;
+  //   CreateObjectiveAndMetrics();
+  //   // initialize the boosting
+  //   if (config_.tree_learner == std::string("feature")) {
+  //     Log::Fatal("Do not support feature parallel in c api");
+  //   }
+  //   if (Network::num_machines() == 1 && config_.tree_learner != std::string("serial")) {
+  //     Log::Warning("Only find one worker, will switch to serial tree learner");
+  //     config_.tree_learner = "serial";
+  //   }
+  //   boosting_->Init(&config_, train_data_, objective_fun_.get(),
+  //                   Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
+  // }
 
-    boosting_.reset(Boosting::CreateBoosting(config_.boosting, nullptr));
-
-    train_data_ = train_data;
-    CreateObjectiveAndMetrics();
-    // initialize the boosting
-    if (config_.tree_learner == std::string("feature")) {
-      Log::Fatal("Do not support feature parallel in c api");
-    }
-    if (Network::num_machines() == 1 && config_.tree_learner != std::string("serial")) {
-      Log::Warning("Only find one worker, will switch to serial tree learner");
-      config_.tree_learner = "serial";
-    }
-    boosting_->Init(&config_, train_data_, objective_fun_.get(),
-                    Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
-  }
-
-  void MergeFrom(const Booster* other) {
-    UNIQUE_LOCK(mutex_)
-    boosting_->MergeFrom(other->boosting_.get());
-  }
+  // void MergeFrom(const Booster* other) {
+  //   UNIQUE_LOCK(mutex_)
+  //   boosting_->MergeFrom(other->boosting_.get());
+  // }
 
   ~Booster() {
   }
 
-  void CreateObjectiveAndMetrics() {
-    // create objective function
-    objective_fun_.reset(ObjectiveFunction::CreateObjectiveFunction(config_.objective,
-                                                                    config_));
-    if (objective_fun_ == nullptr) {
-      Log::Warning("Using self-defined objective function");
-    }
-    // initialize the objective function
-    if (objective_fun_ != nullptr) {
-      objective_fun_->Init(train_data_->metadata(), train_data_->num_data());
-    }
+  // void CreateObjectiveAndMetrics() {
+  //   // create objective function
+  //   objective_fun_.reset(ObjectiveFunction::CreateObjectiveFunction(config_.objective,
+  //                                                                   config_));
+  //   if (objective_fun_ == nullptr) {
+  //     Log::Warning("Using self-defined objective function");
+  //   }
+  //   // initialize the objective function
+  //   if (objective_fun_ != nullptr) {
+  //     objective_fun_->Init(train_data_->metadata(), train_data_->num_data());
+  //   }
+  //
+  //   // create training metric
+  //   train_metric_.clear();
+  //   for (auto metric_type : config_.metric) {
+  //     auto metric = std::unique_ptr<Metric>(
+  //       Metric::CreateMetric(metric_type, config_));
+  //     if (metric == nullptr) { continue; }
+  //     metric->Init(train_data_->metadata(), train_data_->num_data());
+  //     train_metric_.push_back(std::move(metric));
+  //   }
+  //   train_metric_.shrink_to_fit();
+  // }
 
-    // create training metric
-    train_metric_.clear();
-    for (auto metric_type : config_.metric) {
-      auto metric = std::unique_ptr<Metric>(
-        Metric::CreateMetric(metric_type, config_));
-      if (metric == nullptr) { continue; }
-      metric->Init(train_data_->metadata(), train_data_->num_data());
-      train_metric_.push_back(std::move(metric));
-    }
-    train_metric_.shrink_to_fit();
-  }
+  // void ResetTrainingData(const Dataset* train_data) {
+  //   if (train_data != train_data_) {
+  //     UNIQUE_LOCK(mutex_)
+  //     train_data_ = train_data;
+  //     CreateObjectiveAndMetrics();
+  //     // reset the boosting
+  //     boosting_->ResetTrainingData(train_data_,
+  //                                  objective_fun_.get(), Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
+  //   }
+  // }
 
-  void ResetTrainingData(const Dataset* train_data) {
-    if (train_data != train_data_) {
-      UNIQUE_LOCK(mutex_)
-      train_data_ = train_data;
-      CreateObjectiveAndMetrics();
-      // reset the boosting
-      boosting_->ResetTrainingData(train_data_,
-                                   objective_fun_.get(), Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
-    }
-  }
+  // static void CheckDatasetResetConfig(
+  //     const Config& old_config,
+  //     const std::unordered_map<std::string, std::string>& new_param) {
+  //   Config new_config;
+  //   new_config.Set(new_param);
+  //   if (new_param.count("data_random_seed") &&
+  //       new_config.data_random_seed != old_config.data_random_seed) {
+  //     Log::Fatal("Cannot change data_random_seed after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("max_bin") &&
+  //       new_config.max_bin != old_config.max_bin) {
+  //     Log::Fatal("Cannot change max_bin after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("max_bin_by_feature") &&
+  //       new_config.max_bin_by_feature != old_config.max_bin_by_feature) {
+  //     Log::Fatal(
+  //         "Cannot change max_bin_by_feature after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("bin_construct_sample_cnt") &&
+  //       new_config.bin_construct_sample_cnt !=
+  //           old_config.bin_construct_sample_cnt) {
+  //     Log::Fatal(
+  //         "Cannot change bin_construct_sample_cnt after constructed Dataset "
+  //         "handle.");
+  //   }
+  //   if (new_param.count("min_data_in_bin") &&
+  //       new_config.min_data_in_bin != old_config.min_data_in_bin) {
+  //     Log::Fatal(
+  //         "Cannot change min_data_in_bin after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("use_missing") &&
+  //       new_config.use_missing != old_config.use_missing) {
+  //     Log::Fatal("Cannot change use_missing after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("zero_as_missing") &&
+  //       new_config.zero_as_missing != old_config.zero_as_missing) {
+  //     Log::Fatal(
+  //         "Cannot change zero_as_missing after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("categorical_feature") &&
+  //       new_config.categorical_feature != old_config.categorical_feature) {
+  //     Log::Fatal(
+  //         "Cannot change categorical_feature after constructed Dataset "
+  //         "handle.");
+  //   }
+  //   if (new_param.count("feature_pre_filter") &&
+  //       new_config.feature_pre_filter != old_config.feature_pre_filter) {
+  //     Log::Fatal(
+  //         "Cannot change feature_pre_filter after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("is_enable_sparse") &&
+  //       new_config.is_enable_sparse != old_config.is_enable_sparse) {
+  //     Log::Fatal(
+  //         "Cannot change is_enable_sparse after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("pre_partition") &&
+  //       new_config.pre_partition != old_config.pre_partition) {
+  //     Log::Fatal(
+  //         "Cannot change pre_partition after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("enable_bundle") &&
+  //       new_config.enable_bundle != old_config.enable_bundle) {
+  //     Log::Fatal(
+  //         "Cannot change enable_bundle after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("header") && new_config.header != old_config.header) {
+  //     Log::Fatal("Cannot change header after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("two_round") &&
+  //       new_config.two_round != old_config.two_round) {
+  //     Log::Fatal("Cannot change two_round after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("label_column") &&
+  //       new_config.label_column != old_config.label_column) {
+  //     Log::Fatal(
+  //         "Cannot change label_column after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("weight_column") &&
+  //       new_config.weight_column != old_config.weight_column) {
+  //     Log::Fatal(
+  //         "Cannot change weight_column after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("group_column") &&
+  //       new_config.group_column != old_config.group_column) {
+  //     Log::Fatal(
+  //         "Cannot change group_column after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("ignore_column") &&
+  //       new_config.ignore_column != old_config.ignore_column) {
+  //     Log::Fatal(
+  //         "Cannot change ignore_column after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("forcedbins_filename")) {
+  //     Log::Fatal("Cannot change forced bins after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("min_data_in_leaf") &&
+  //       new_config.min_data_in_leaf < old_config.min_data_in_leaf &&
+  //       old_config.feature_pre_filter) {
+  //     Log::Fatal(
+  //         "Reducing `min_data_in_leaf` with `feature_pre_filter=true` may "
+  //         "cause unexpected behaviour "
+  //         "for features that were pre-filtered by the larger "
+  //         "`min_data_in_leaf`.\n"
+  //         "You need to set `feature_pre_filter=false` to dynamically change "
+  //         "the `min_data_in_leaf`.");
+  //   }
+  //   if (new_param.count("linear_tree") && new_config.linear_tree != old_config.linear_tree) {
+  //     Log::Fatal("Cannot change linear_tree after constructed Dataset handle.");
+  //   }
+  //   if (new_param.count("precise_float_parser") &&
+  //       new_config.precise_float_parser != old_config.precise_float_parser) {
+  //     Log::Fatal("Cannot change precise_float_parser after constructed Dataset handle.");
+  //   }
+  // }
 
-  static void CheckDatasetResetConfig(
-      const Config& old_config,
-      const std::unordered_map<std::string, std::string>& new_param) {
-    Config new_config;
-    new_config.Set(new_param);
-    if (new_param.count("data_random_seed") &&
-        new_config.data_random_seed != old_config.data_random_seed) {
-      Log::Fatal("Cannot change data_random_seed after constructed Dataset handle.");
-    }
-    if (new_param.count("max_bin") &&
-        new_config.max_bin != old_config.max_bin) {
-      Log::Fatal("Cannot change max_bin after constructed Dataset handle.");
-    }
-    if (new_param.count("max_bin_by_feature") &&
-        new_config.max_bin_by_feature != old_config.max_bin_by_feature) {
-      Log::Fatal(
-          "Cannot change max_bin_by_feature after constructed Dataset handle.");
-    }
-    if (new_param.count("bin_construct_sample_cnt") &&
-        new_config.bin_construct_sample_cnt !=
-            old_config.bin_construct_sample_cnt) {
-      Log::Fatal(
-          "Cannot change bin_construct_sample_cnt after constructed Dataset "
-          "handle.");
-    }
-    if (new_param.count("min_data_in_bin") &&
-        new_config.min_data_in_bin != old_config.min_data_in_bin) {
-      Log::Fatal(
-          "Cannot change min_data_in_bin after constructed Dataset handle.");
-    }
-    if (new_param.count("use_missing") &&
-        new_config.use_missing != old_config.use_missing) {
-      Log::Fatal("Cannot change use_missing after constructed Dataset handle.");
-    }
-    if (new_param.count("zero_as_missing") &&
-        new_config.zero_as_missing != old_config.zero_as_missing) {
-      Log::Fatal(
-          "Cannot change zero_as_missing after constructed Dataset handle.");
-    }
-    if (new_param.count("categorical_feature") &&
-        new_config.categorical_feature != old_config.categorical_feature) {
-      Log::Fatal(
-          "Cannot change categorical_feature after constructed Dataset "
-          "handle.");
-    }
-    if (new_param.count("feature_pre_filter") &&
-        new_config.feature_pre_filter != old_config.feature_pre_filter) {
-      Log::Fatal(
-          "Cannot change feature_pre_filter after constructed Dataset handle.");
-    }
-    if (new_param.count("is_enable_sparse") &&
-        new_config.is_enable_sparse != old_config.is_enable_sparse) {
-      Log::Fatal(
-          "Cannot change is_enable_sparse after constructed Dataset handle.");
-    }
-    if (new_param.count("pre_partition") &&
-        new_config.pre_partition != old_config.pre_partition) {
-      Log::Fatal(
-          "Cannot change pre_partition after constructed Dataset handle.");
-    }
-    if (new_param.count("enable_bundle") &&
-        new_config.enable_bundle != old_config.enable_bundle) {
-      Log::Fatal(
-          "Cannot change enable_bundle after constructed Dataset handle.");
-    }
-    if (new_param.count("header") && new_config.header != old_config.header) {
-      Log::Fatal("Cannot change header after constructed Dataset handle.");
-    }
-    if (new_param.count("two_round") &&
-        new_config.two_round != old_config.two_round) {
-      Log::Fatal("Cannot change two_round after constructed Dataset handle.");
-    }
-    if (new_param.count("label_column") &&
-        new_config.label_column != old_config.label_column) {
-      Log::Fatal(
-          "Cannot change label_column after constructed Dataset handle.");
-    }
-    if (new_param.count("weight_column") &&
-        new_config.weight_column != old_config.weight_column) {
-      Log::Fatal(
-          "Cannot change weight_column after constructed Dataset handle.");
-    }
-    if (new_param.count("group_column") &&
-        new_config.group_column != old_config.group_column) {
-      Log::Fatal(
-          "Cannot change group_column after constructed Dataset handle.");
-    }
-    if (new_param.count("ignore_column") &&
-        new_config.ignore_column != old_config.ignore_column) {
-      Log::Fatal(
-          "Cannot change ignore_column after constructed Dataset handle.");
-    }
-    if (new_param.count("forcedbins_filename")) {
-      Log::Fatal("Cannot change forced bins after constructed Dataset handle.");
-    }
-    if (new_param.count("min_data_in_leaf") &&
-        new_config.min_data_in_leaf < old_config.min_data_in_leaf &&
-        old_config.feature_pre_filter) {
-      Log::Fatal(
-          "Reducing `min_data_in_leaf` with `feature_pre_filter=true` may "
-          "cause unexpected behaviour "
-          "for features that were pre-filtered by the larger "
-          "`min_data_in_leaf`.\n"
-          "You need to set `feature_pre_filter=false` to dynamically change "
-          "the `min_data_in_leaf`.");
-    }
-    if (new_param.count("linear_tree") && new_config.linear_tree != old_config.linear_tree) {
-      Log::Fatal("Cannot change linear_tree after constructed Dataset handle.");
-    }
-    if (new_param.count("precise_float_parser") &&
-        new_config.precise_float_parser != old_config.precise_float_parser) {
-      Log::Fatal("Cannot change precise_float_parser after constructed Dataset handle.");
-    }
-  }
+  // void ResetConfig(const char* parameters) {
+  //   UNIQUE_LOCK(mutex_)
+  //   auto param = Config::Str2Map(parameters);
+  //   Config new_config;
+  //   new_config.Set(param);
+  //   if (param.count("num_class") && new_config.num_class != config_.num_class) {
+  //     Log::Fatal("Cannot change num_class during training");
+  //   }
+  //   if (param.count("boosting") && new_config.boosting != config_.boosting) {
+  //     Log::Fatal("Cannot change boosting during training");
+  //   }
+  //   if (param.count("metric") && new_config.metric != config_.metric) {
+  //     Log::Fatal("Cannot change metric during training");
+  //   }
+  //   CheckDatasetResetConfig(config_, param);
+  //
+  //   config_.Set(param);
+  //
+  //   OMP_SET_NUM_THREADS(config_.num_threads);
+  //
+  //   if (param.count("objective")) {
+  //     // create objective function
+  //     objective_fun_.reset(ObjectiveFunction::CreateObjectiveFunction(config_.objective,
+  //                                                                     config_));
+  //     if (objective_fun_ == nullptr) {
+  //       Log::Warning("Using self-defined objective function");
+  //     }
+  //     // initialize the objective function
+  //     if (objective_fun_ != nullptr) {
+  //       objective_fun_->Init(train_data_->metadata(), train_data_->num_data());
+  //     }
+  //     boosting_->ResetTrainingData(train_data_,
+  //                                  objective_fun_.get(), Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
+  //   }
+  //
+  //   boosting_->ResetConfig(&config_);
+  // }
 
-  void ResetConfig(const char* parameters) {
-    UNIQUE_LOCK(mutex_)
-    auto param = Config::Str2Map(parameters);
-    Config new_config;
-    new_config.Set(param);
-    if (param.count("num_class") && new_config.num_class != config_.num_class) {
-      Log::Fatal("Cannot change num_class during training");
-    }
-    if (param.count("boosting") && new_config.boosting != config_.boosting) {
-      Log::Fatal("Cannot change boosting during training");
-    }
-    if (param.count("metric") && new_config.metric != config_.metric) {
-      Log::Fatal("Cannot change metric during training");
-    }
-    CheckDatasetResetConfig(config_, param);
-
-    config_.Set(param);
-
-    OMP_SET_NUM_THREADS(config_.num_threads);
-
-    if (param.count("objective")) {
-      // create objective function
-      objective_fun_.reset(ObjectiveFunction::CreateObjectiveFunction(config_.objective,
-                                                                      config_));
-      if (objective_fun_ == nullptr) {
-        Log::Warning("Using self-defined objective function");
-      }
-      // initialize the objective function
-      if (objective_fun_ != nullptr) {
-        objective_fun_->Init(train_data_->metadata(), train_data_->num_data());
-      }
-      boosting_->ResetTrainingData(train_data_,
-                                   objective_fun_.get(), Common::ConstPtrInVectorWrapper<Metric>(train_metric_));
-    }
-
-    boosting_->ResetConfig(&config_);
-  }
-
-  void AddValidData(const Dataset* valid_data) {
-    UNIQUE_LOCK(mutex_)
-    valid_metrics_.emplace_back();
-    for (auto metric_type : config_.metric) {
-      auto metric = std::unique_ptr<Metric>(Metric::CreateMetric(metric_type, config_));
-      if (metric == nullptr) { continue; }
-      metric->Init(valid_data->metadata(), valid_data->num_data());
-      valid_metrics_.back().push_back(std::move(metric));
-    }
-    valid_metrics_.back().shrink_to_fit();
-    boosting_->AddValidDataset(valid_data,
-                               Common::ConstPtrInVectorWrapper<Metric>(valid_metrics_.back()));
-  }
-
-  bool TrainOneIter() {
-    UNIQUE_LOCK(mutex_)
-    return boosting_->TrainOneIter(nullptr, nullptr);
-  }
-
-  void Refit(const int32_t* leaf_preds, int32_t nrow, int32_t ncol) {
-    UNIQUE_LOCK(mutex_)
-    std::vector<std::vector<int32_t>> v_leaf_preds(nrow, std::vector<int32_t>(ncol, 0));
-    for (int i = 0; i < nrow; ++i) {
-      for (int j = 0; j < ncol; ++j) {
-        v_leaf_preds[i][j] = leaf_preds[static_cast<size_t>(i) * static_cast<size_t>(ncol) + static_cast<size_t>(j)];
-      }
-    }
-    boosting_->RefitTree(v_leaf_preds);
-  }
-
-  bool TrainOneIter(const score_t* gradients, const score_t* hessians) {
-    UNIQUE_LOCK(mutex_)
-    return boosting_->TrainOneIter(gradients, hessians);
-  }
-
-  void RollbackOneIter() {
-    UNIQUE_LOCK(mutex_)
-    boosting_->RollbackOneIter();
-  }
+  // void AddValidData(const Dataset* valid_data) {
+  //   UNIQUE_LOCK(mutex_)
+  //   valid_metrics_.emplace_back();
+  //   for (auto metric_type : config_.metric) {
+  //     auto metric = std::unique_ptr<Metric>(Metric::CreateMetric(metric_type, config_));
+  //     if (metric == nullptr) { continue; }
+  //     metric->Init(valid_data->metadata(), valid_data->num_data());
+  //     valid_metrics_.back().push_back(std::move(metric));
+  //   }
+  //   valid_metrics_.back().shrink_to_fit();
+  //   boosting_->AddValidDataset(valid_data,
+  //                              Common::ConstPtrInVectorWrapper<Metric>(valid_metrics_.back()));
+  // }
+  //
+  // bool TrainOneIter() {
+  //   UNIQUE_LOCK(mutex_)
+  //   return boosting_->TrainOneIter(nullptr, nullptr);
+  // }
+  //
+  // void Refit(const int32_t* leaf_preds, int32_t nrow, int32_t ncol) {
+  //   UNIQUE_LOCK(mutex_)
+  //   std::vector<std::vector<int32_t>> v_leaf_preds(nrow, std::vector<int32_t>(ncol, 0));
+  //   for (int i = 0; i < nrow; ++i) {
+  //     for (int j = 0; j < ncol; ++j) {
+  //       v_leaf_preds[i][j] = leaf_preds[static_cast<size_t>(i) * static_cast<size_t>(ncol) + static_cast<size_t>(j)];
+  //     }
+  //   }
+  //   boosting_->RefitTree(v_leaf_preds);
+  // }
+  //
+  // bool TrainOneIter(const score_t* gradients, const score_t* hessians) {
+  //   UNIQUE_LOCK(mutex_)
+  //   return boosting_->TrainOneIter(gradients, hessians);
+  // }
+  //
+  // void RollbackOneIter() {
+  //   UNIQUE_LOCK(mutex_)
+  //   boosting_->RollbackOneIter();
+  // }
 
   void SetSingleRowPredictor(int start_iteration, int num_iteration, int predict_type, const Config& config) {
       UNIQUE_LOCK(mutex_)
@@ -811,7 +811,7 @@ class Booster {
   const Boosting* GetBoosting() const { return boosting_.get(); }
 
  private:
-  const Dataset* train_data_;
+  // const Dataset* train_data_;
   std::unique_ptr<Boosting> boosting_;
   std::unique_ptr<SingleRowPredictor> single_row_predictor_[PREDICTOR_TYPES];
 
@@ -838,8 +838,8 @@ using LightGBM::Common::Vector2Ptr;
 using LightGBM::Common::VectorSize;
 using LightGBM::Config;
 using LightGBM::data_size_t;
-using LightGBM::Dataset;
-using LightGBM::DatasetLoader;
+// using LightGBM::Dataset;
+// using LightGBM::DatasetLoader;
 using LightGBM::kZeroThreshold;
 using LightGBM::LGBM_APIHandleException;
 using LightGBM::Log;
@@ -1715,15 +1715,15 @@ class CSC_RowIterator {
 
 // ---- start of booster
 
-int LGBM_BoosterCreate(const DatasetHandle train_data,
-                       const char* parameters,
-                       BoosterHandle* out) {
-  API_BEGIN();
-  const Dataset* p_train_data = reinterpret_cast<const Dataset*>(train_data);
-  auto ret = std::unique_ptr<Booster>(new Booster(p_train_data, parameters));
-  *out = ret.release();
-  API_END();
-}
+// int LGBM_BoosterCreate(const DatasetHandle train_data,
+//                        const char* parameters,
+//                        BoosterHandle* out) {
+//   API_BEGIN();
+//   const Dataset* p_train_data = reinterpret_cast<const Dataset*>(train_data);
+//   auto ret = std::unique_ptr<Booster>(new Booster(p_train_data, parameters));
+//   *out = ret.release();
+//   API_END();
+// }
 
 int LGBM_BoosterCreateFromModelfile(
   const char* filename,
@@ -1779,39 +1779,39 @@ int LGBM_BoosterShuffleModels(BoosterHandle handle, int start_iter, int end_iter
   API_END();
 }
 
-int LGBM_BoosterMerge(BoosterHandle handle,
-                      BoosterHandle other_handle) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  Booster* ref_other_booster = reinterpret_cast<Booster*>(other_handle);
-  ref_booster->MergeFrom(ref_other_booster);
-  API_END();
-}
+// int LGBM_BoosterMerge(BoosterHandle handle,
+//                       BoosterHandle other_handle) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   Booster* ref_other_booster = reinterpret_cast<Booster*>(other_handle);
+//   ref_booster->MergeFrom(ref_other_booster);
+//   API_END();
+// }
 
-int LGBM_BoosterAddValidData(BoosterHandle handle,
-                             const DatasetHandle valid_data) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  const Dataset* p_dataset = reinterpret_cast<const Dataset*>(valid_data);
-  ref_booster->AddValidData(p_dataset);
-  API_END();
-}
+// int LGBM_BoosterAddValidData(BoosterHandle handle,
+//                              const DatasetHandle valid_data) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   const Dataset* p_dataset = reinterpret_cast<const Dataset*>(valid_data);
+//   ref_booster->AddValidData(p_dataset);
+//   API_END();
+// }
 
-int LGBM_BoosterResetTrainingData(BoosterHandle handle,
-                                  const DatasetHandle train_data) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  const Dataset* p_dataset = reinterpret_cast<const Dataset*>(train_data);
-  ref_booster->ResetTrainingData(p_dataset);
-  API_END();
-}
+// int LGBM_BoosterResetTrainingData(BoosterHandle handle,
+//                                   const DatasetHandle train_data) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   const Dataset* p_dataset = reinterpret_cast<const Dataset*>(train_data);
+//   ref_booster->ResetTrainingData(p_dataset);
+//   API_END();
+// }
 
-int LGBM_BoosterResetParameter(BoosterHandle handle, const char* parameters) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->ResetConfig(parameters);
-  API_END();
-}
+// int LGBM_BoosterResetParameter(BoosterHandle handle, const char* parameters) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->ResetConfig(parameters);
+//   API_END();
+// }
 
 int LGBM_BoosterGetNumClasses(BoosterHandle handle, int* out_len) {
   API_BEGIN();
@@ -1831,52 +1831,52 @@ int LGBM_BoosterGetLinear(BoosterHandle handle, int* out) {
   API_END();
 }
 
-int LGBM_BoosterRefit(BoosterHandle handle, const int32_t* leaf_preds, int32_t nrow, int32_t ncol) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->Refit(leaf_preds, nrow, ncol);
-  API_END();
-}
+// int LGBM_BoosterRefit(BoosterHandle handle, const int32_t* leaf_preds, int32_t nrow, int32_t ncol) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->Refit(leaf_preds, nrow, ncol);
+//   API_END();
+// }
 
-int LGBM_BoosterUpdateOneIter(BoosterHandle handle, int* is_finished) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  if (ref_booster->TrainOneIter()) {
-    *is_finished = 1;
-  } else {
-    *is_finished = 0;
-  }
-  API_END();
-}
+// int LGBM_BoosterUpdateOneIter(BoosterHandle handle, int* is_finished) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   if (ref_booster->TrainOneIter()) {
+//     *is_finished = 1;
+//   } else {
+//     *is_finished = 0;
+//   }
+//   API_END();
+// }
 
-int LGBM_BoosterUpdateOneIterCustom(BoosterHandle handle,
-                                    const float* grad,
-                                    const float* hess,
-                                    int* is_finished) {
-  API_BEGIN();
-  #ifdef SCORE_T_USE_DOUBLE
-  (void) handle;       // UNUSED VARIABLE
-  (void) grad;         // UNUSED VARIABLE
-  (void) hess;         // UNUSED VARIABLE
-  (void) is_finished;  // UNUSED VARIABLE
-  Log::Fatal("Don't support custom loss function when SCORE_T_USE_DOUBLE is enabled");
-  #else
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  if (ref_booster->TrainOneIter(grad, hess)) {
-    *is_finished = 1;
-  } else {
-    *is_finished = 0;
-  }
-  #endif
-  API_END();
-}
+// int LGBM_BoosterUpdateOneIterCustom(BoosterHandle handle,
+//                                     const float* grad,
+//                                     const float* hess,
+//                                     int* is_finished) {
+//   API_BEGIN();
+//   #ifdef SCORE_T_USE_DOUBLE
+//   (void) handle;       // UNUSED VARIABLE
+//   (void) grad;         // UNUSED VARIABLE
+//   (void) hess;         // UNUSED VARIABLE
+//   (void) is_finished;  // UNUSED VARIABLE
+//   Log::Fatal("Don't support custom loss function when SCORE_T_USE_DOUBLE is enabled");
+//   #else
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   if (ref_booster->TrainOneIter(grad, hess)) {
+//     *is_finished = 1;
+//   } else {
+//     *is_finished = 0;
+//   }
+//   #endif
+//   API_END();
+// }
 
-int LGBM_BoosterRollbackOneIter(BoosterHandle handle) {
-  API_BEGIN();
-  Booster* ref_booster = reinterpret_cast<Booster*>(handle);
-  ref_booster->RollbackOneIter();
-  API_END();
-}
+// int LGBM_BoosterRollbackOneIter(BoosterHandle handle) {
+//   API_BEGIN();
+//   Booster* ref_booster = reinterpret_cast<Booster*>(handle);
+//   ref_booster->RollbackOneIter();
+//   API_END();
+// }
 
 int LGBM_BoosterGetCurrentIteration(BoosterHandle handle, int* out_iteration) {
   API_BEGIN();
