@@ -26,7 +26,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "application/predictor.hpp"
+// #include "application/predictor.hpp"
 #include <LightGBM/utils/yamc/alternate_shared_mutex.hpp>
 #include <LightGBM/utils/yamc/yamc_shared_lock.hpp>
 
@@ -717,20 +717,20 @@ class Booster {
     boosting_->GetPredictAt(data_idx, out_result, out_len);
   }
 
-  void SaveModelToFile(int start_iteration, int num_iteration, int feature_importance_type, const char* filename) const {
-    boosting_->SaveModelToFile(start_iteration, num_iteration, feature_importance_type, filename);
-  }
+  // void SaveModelToFile(int start_iteration, int num_iteration, int feature_importance_type, const char* filename) const {
+  //   boosting_->SaveModelToFile(start_iteration, num_iteration, feature_importance_type, filename);
+  // }
 
   void LoadModelFromString(const char* model_str) {
     size_t len = std::strlen(model_str);
     boosting_->LoadModelFromString(model_str, len);
   }
 
-  std::string SaveModelToString(int start_iteration, int num_iteration,
-                                int feature_importance_type) const {
-    return boosting_->SaveModelToString(start_iteration,
-                                        num_iteration, feature_importance_type);
-  }
+  // std::string SaveModelToString(int start_iteration, int num_iteration,
+  //                               int feature_importance_type) const {
+  //   return boosting_->SaveModelToString(start_iteration,
+  //                                       num_iteration, feature_importance_type);
+  // }
 
   // std::string DumpModel(int start_iteration, int num_iteration,
   //                       int feature_importance_type) const {

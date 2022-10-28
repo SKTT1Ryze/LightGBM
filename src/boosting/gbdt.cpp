@@ -180,41 +180,41 @@ void GBDT::Init(const Config* config, const Dataset* train_data, const Objective
   }
 }
 
-void GBDT::AddValidDataset(const Dataset* valid_data,
-                           const std::vector<const Metric*>& valid_metrics) {
-  if (!train_data_->CheckAlign(*valid_data)) {
-    Log::Fatal("Cannot add validation data, since it has different bin mappers with training data");
-  }
-  // for a validation dataset, we need its score and metric
-  auto new_score_updater =
-    #ifdef USE_CUDA_EXP
-    config_->device_type == std::string("cuda_exp") ?
-    std::unique_ptr<CUDAScoreUpdater>(new CUDAScoreUpdater(valid_data, num_tree_per_iteration_,
-      objective_function_ != nullptr && objective_function_->IsCUDAObjective())) :
-    #endif  // USE_CUDA_EXP
-    std::unique_ptr<ScoreUpdater>(new ScoreUpdater(valid_data, num_tree_per_iteration_));
-  // update score
-  for (int i = 0; i < iter_; ++i) {
-    for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-      auto curr_tree = (i + num_init_iteration_) * num_tree_per_iteration_ + cur_tree_id;
-      new_score_updater->AddScore(models_[curr_tree].get(), cur_tree_id);
-    }
-  }
-  valid_score_updater_.push_back(std::move(new_score_updater));
-  valid_metrics_.emplace_back();
-  for (const auto& metric : valid_metrics) {
-    valid_metrics_.back().push_back(metric);
-  }
-  valid_metrics_.back().shrink_to_fit();
-
-  if (early_stopping_round_ > 0) {
-    auto num_metrics = valid_metrics.size();
-    if (es_first_metric_only_) { num_metrics = 1; }
-    best_iter_.emplace_back(num_metrics, 0);
-    best_score_.emplace_back(num_metrics, kMinScore);
-    best_msg_.emplace_back(num_metrics);
-  }
-}
+// void GBDT::AddValidDataset(const Dataset* valid_data,
+//                            const std::vector<const Metric*>& valid_metrics) {
+//   if (!train_data_->CheckAlign(*valid_data)) {
+//     Log::Fatal("Cannot add validation data, since it has different bin mappers with training data");
+//   }
+//   // for a validation dataset, we need its score and metric
+//   auto new_score_updater =
+//     #ifdef USE_CUDA_EXP
+//     config_->device_type == std::string("cuda_exp") ?
+//     std::unique_ptr<CUDAScoreUpdater>(new CUDAScoreUpdater(valid_data, num_tree_per_iteration_,
+//       objective_function_ != nullptr && objective_function_->IsCUDAObjective())) :
+//     #endif  // USE_CUDA_EXP
+//     std::unique_ptr<ScoreUpdater>(new ScoreUpdater(valid_data, num_tree_per_iteration_));
+//   // update score
+//   for (int i = 0; i < iter_; ++i) {
+//     for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//       auto curr_tree = (i + num_init_iteration_) * num_tree_per_iteration_ + cur_tree_id;
+//       new_score_updater->AddScore(models_[curr_tree].get(), cur_tree_id);
+//     }
+//   }
+//   valid_score_updater_.push_back(std::move(new_score_updater));
+//   valid_metrics_.emplace_back();
+//   for (const auto& metric : valid_metrics) {
+//     valid_metrics_.back().push_back(metric);
+//   }
+//   valid_metrics_.back().shrink_to_fit();
+//
+//   if (early_stopping_round_ > 0) {
+//     auto num_metrics = valid_metrics.size();
+//     if (es_first_metric_only_) { num_metrics = 1; }
+//     best_iter_.emplace_back(num_metrics, 0);
+//     best_score_.emplace_back(num_metrics, kMinScore);
+//     best_msg_.emplace_back(num_metrics);
+//   }
+// }
 
 void GBDT::Boosting() {
   Common::FunctionTimer fun_timer("GBDT::Boosting", global_timer);
@@ -329,64 +329,64 @@ void GBDT::Bagging(int iter) {
   }
 }
 
-void GBDT::Train(int snapshot_freq, const std::string& model_output_path) {
-  Common::FunctionTimer fun_timer("GBDT::Train", global_timer);
-  bool is_finished = false;
-  auto start_time = std::chrono::steady_clock::now();
-  for (int iter = 0; iter < config_->num_iterations && !is_finished; ++iter) {
-    is_finished = TrainOneIter(nullptr, nullptr);
-    if (!is_finished) {
-      is_finished = EvalAndCheckEarlyStopping();
-    }
-    auto end_time = std::chrono::steady_clock::now();
-    // output used time per iteration
-    Log::Info("%f seconds elapsed, finished iteration %d", std::chrono::duration<double,
-              std::milli>(end_time - start_time) * 1e-3, iter + 1);
-    if (snapshot_freq > 0
-        && (iter + 1) % snapshot_freq == 0) {
-      std::string snapshot_out = model_output_path + ".snapshot_iter_" + std::to_string(iter + 1);
-      SaveModelToFile(0, -1, config_->saved_feature_importance_type, snapshot_out.c_str());
-    }
-  }
-}
+// void GBDT::Train(int snapshot_freq, const std::string& model_output_path) {
+//   Common::FunctionTimer fun_timer("GBDT::Train", global_timer);
+//   bool is_finished = false;
+//   auto start_time = std::chrono::steady_clock::now();
+//   for (int iter = 0; iter < config_->num_iterations && !is_finished; ++iter) {
+//     is_finished = TrainOneIter(nullptr, nullptr);
+//     if (!is_finished) {
+//       is_finished = EvalAndCheckEarlyStopping();
+//     }
+//     auto end_time = std::chrono::steady_clock::now();
+//     // output used time per iteration
+//     Log::Info("%f seconds elapsed, finished iteration %d", std::chrono::duration<double,
+//               std::milli>(end_time - start_time) * 1e-3, iter + 1);
+//     if (snapshot_freq > 0
+//         && (iter + 1) % snapshot_freq == 0) {
+//       std::string snapshot_out = model_output_path + ".snapshot_iter_" + std::to_string(iter + 1);
+//       SaveModelToFile(0, -1, config_->saved_feature_importance_type, snapshot_out.c_str());
+//     }
+//   }
+// }
 
-void GBDT::RefitTree(const std::vector<std::vector<int>>& tree_leaf_prediction) {
-  CHECK_GT(tree_leaf_prediction.size(), 0);
-  CHECK_EQ(static_cast<size_t>(num_data_), tree_leaf_prediction.size());
-  CHECK_EQ(static_cast<size_t>(models_.size()), tree_leaf_prediction[0].size());
-  int num_iterations = static_cast<int>(models_.size() / num_tree_per_iteration_);
-  std::vector<int> leaf_pred(num_data_);
-  if (linear_tree_) {
-    std::vector<int> max_leaves_by_thread = std::vector<int>(OMP_NUM_THREADS(), 0);
-    #pragma omp parallel for schedule(static)
-    for (int i = 0; i < static_cast<int>(tree_leaf_prediction.size()); ++i) {
-      int tid = omp_get_thread_num();
-      for (size_t j = 0; j < tree_leaf_prediction[i].size(); ++j) {
-        max_leaves_by_thread[tid] = std::max(max_leaves_by_thread[tid], tree_leaf_prediction[i][j]);
-      }
-    }
-    int max_leaves = *std::max_element(max_leaves_by_thread.begin(), max_leaves_by_thread.end());
-    max_leaves += 1;
-    tree_learner_->InitLinear(train_data_, max_leaves);
-  }
-  for (int iter = 0; iter < num_iterations; ++iter) {
-    Boosting();
-    for (int tree_id = 0; tree_id < num_tree_per_iteration_; ++tree_id) {
-      int model_index = iter * num_tree_per_iteration_ + tree_id;
-      #pragma omp parallel for schedule(static)
-      for (int i = 0; i < num_data_; ++i) {
-        leaf_pred[i] = tree_leaf_prediction[i][model_index];
-        CHECK_LT(leaf_pred[i], models_[model_index]->num_leaves());
-      }
-      size_t offset = static_cast<size_t>(tree_id) * num_data_;
-      auto grad = gradients_pointer_ + offset;
-      auto hess = hessians_pointer_ + offset;
-      auto new_tree = tree_learner_->FitByExistingTree(models_[model_index].get(), leaf_pred, grad, hess);
-      train_score_updater_->AddScore(tree_learner_.get(), new_tree, tree_id);
-      models_[model_index].reset(new_tree);
-    }
-  }
-}
+// void GBDT::RefitTree(const std::vector<std::vector<int>>& tree_leaf_prediction) {
+//   CHECK_GT(tree_leaf_prediction.size(), 0);
+//   CHECK_EQ(static_cast<size_t>(num_data_), tree_leaf_prediction.size());
+//   CHECK_EQ(static_cast<size_t>(models_.size()), tree_leaf_prediction[0].size());
+//   int num_iterations = static_cast<int>(models_.size() / num_tree_per_iteration_);
+//   std::vector<int> leaf_pred(num_data_);
+//   if (linear_tree_) {
+//     std::vector<int> max_leaves_by_thread = std::vector<int>(OMP_NUM_THREADS(), 0);
+//     #pragma omp parallel for schedule(static)
+//     for (int i = 0; i < static_cast<int>(tree_leaf_prediction.size()); ++i) {
+//       int tid = omp_get_thread_num();
+//       for (size_t j = 0; j < tree_leaf_prediction[i].size(); ++j) {
+//         max_leaves_by_thread[tid] = std::max(max_leaves_by_thread[tid], tree_leaf_prediction[i][j]);
+//       }
+//     }
+//     int max_leaves = *std::max_element(max_leaves_by_thread.begin(), max_leaves_by_thread.end());
+//     max_leaves += 1;
+//     tree_learner_->InitLinear(train_data_, max_leaves);
+//   }
+//   for (int iter = 0; iter < num_iterations; ++iter) {
+//     Boosting();
+//     for (int tree_id = 0; tree_id < num_tree_per_iteration_; ++tree_id) {
+//       int model_index = iter * num_tree_per_iteration_ + tree_id;
+//       #pragma omp parallel for schedule(static)
+//       for (int i = 0; i < num_data_; ++i) {
+//         leaf_pred[i] = tree_leaf_prediction[i][model_index];
+//         CHECK_LT(leaf_pred[i], models_[model_index]->num_leaves());
+//       }
+//       size_t offset = static_cast<size_t>(tree_id) * num_data_;
+//       auto grad = gradients_pointer_ + offset;
+//       auto hess = hessians_pointer_ + offset;
+//       auto new_tree = tree_learner_->FitByExistingTree(models_[model_index].get(), leaf_pred, grad, hess);
+//       train_score_updater_->AddScore(tree_learner_.get(), new_tree, tree_id);
+//       models_[model_index].reset(new_tree);
+//     }
+//   }
+// }
 
 /* If the custom "average" is implemented it will be used in place of the label average (if enabled)
 *
@@ -434,129 +434,129 @@ double GBDT::BoostFromAverage(int class_id, bool update_scorer) {
   return 0.0f;
 }
 
-bool GBDT::TrainOneIter(const score_t* gradients, const score_t* hessians) {
-  Common::FunctionTimer fun_timer("GBDT::TrainOneIter", global_timer);
-  std::vector<double> init_scores(num_tree_per_iteration_, 0.0);
-  // boosting first
-  if (gradients == nullptr || hessians == nullptr) {
-    for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-      init_scores[cur_tree_id] = BoostFromAverage(cur_tree_id, true);
-    }
-    Boosting();
-    gradients = gradients_pointer_;
-    hessians = hessians_pointer_;
-  } else {
-    // use customized objective function
-    CHECK(objective_function_ == nullptr);
-    if (config_->boosting == std::string("goss")) {
-      // need to copy customized gradients when using GOSS
-      int64_t total_size = static_cast<int64_t>(num_data_) * num_tree_per_iteration_;
-      #pragma omp parallel for schedule(static)
-      for (int64_t i = 0; i < total_size; ++i) {
-        gradients_[i] = gradients[i];
-        hessians_[i] = hessians[i];
-      }
-      CHECK_EQ(gradients_pointer_, gradients_.data());
-      CHECK_EQ(hessians_pointer_, hessians_.data());
-      gradients = gradients_pointer_;
-      hessians = hessians_pointer_;
-    }
-  }
+// bool GBDT::TrainOneIter(const score_t* gradients, const score_t* hessians) {
+//   Common::FunctionTimer fun_timer("GBDT::TrainOneIter", global_timer);
+//   std::vector<double> init_scores(num_tree_per_iteration_, 0.0);
+//   // boosting first
+//   if (gradients == nullptr || hessians == nullptr) {
+//     for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//       init_scores[cur_tree_id] = BoostFromAverage(cur_tree_id, true);
+//     }
+//     Boosting();
+//     gradients = gradients_pointer_;
+//     hessians = hessians_pointer_;
+//   } else {
+//     // use customized objective function
+//     CHECK(objective_function_ == nullptr);
+//     if (config_->boosting == std::string("goss")) {
+//       // need to copy customized gradients when using GOSS
+//       int64_t total_size = static_cast<int64_t>(num_data_) * num_tree_per_iteration_;
+//       #pragma omp parallel for schedule(static)
+//       for (int64_t i = 0; i < total_size; ++i) {
+//         gradients_[i] = gradients[i];
+//         hessians_[i] = hessians[i];
+//       }
+//       CHECK_EQ(gradients_pointer_, gradients_.data());
+//       CHECK_EQ(hessians_pointer_, hessians_.data());
+//       gradients = gradients_pointer_;
+//       hessians = hessians_pointer_;
+//     }
+//   }
 
   // bagging logic
-  Bagging(iter_);
+//   Bagging(iter_);
+//
+//   if (gradients != nullptr && is_use_subset_ && bag_data_cnt_ < num_data_ && !boosting_on_gpu_ && config_->boosting != std::string("goss")) {
+//     // allocate gradients_ and hessians_ for copy gradients for using data subset
+//     int64_t total_size = static_cast<int64_t>(num_data_) * num_tree_per_iteration_;
+//     gradients_.resize(total_size);
+//     hessians_.resize(total_size);
+//     gradients_pointer_ = gradients_.data();
+//     hessians_pointer_ = hessians_.data();
+//   }
+//
+//   bool should_continue = false;
+//   for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//     const size_t offset = static_cast<size_t>(cur_tree_id) * num_data_;
+//     std::unique_ptr<Tree> new_tree(new Tree(2, false, false));
+//     if (class_need_train_[cur_tree_id] && train_data_->num_features() > 0) {
+//       auto grad = gradients + offset;
+//       auto hess = hessians + offset;
+//       // need to copy gradients for bagging subset.
+//       if (is_use_subset_ && bag_data_cnt_ < num_data_ && !boosting_on_gpu_) {
+//         for (int i = 0; i < bag_data_cnt_; ++i) {
+//           gradients_pointer_[offset + i] = grad[bag_data_indices_[i]];
+//           hessians_pointer_[offset + i] = hess[bag_data_indices_[i]];
+//         }
+//         grad = gradients_pointer_ + offset;
+//         hess = hessians_pointer_ + offset;
+//       }
+//       bool is_first_tree = models_.size() < static_cast<size_t>(num_tree_per_iteration_);
+//       new_tree.reset(tree_learner_->Train(grad, hess, is_first_tree));
+//     }
+//
+//     if (new_tree->num_leaves() > 1) {
+//       should_continue = true;
+//       auto score_ptr = train_score_updater_->score() + offset;
+//       auto residual_getter = [score_ptr](const label_t* label, int i) {return static_cast<double>(label[i]) - score_ptr[i]; };
+//       tree_learner_->RenewTreeOutput(new_tree.get(), objective_function_, residual_getter,
+//                                      num_data_, bag_data_indices_.data(), bag_data_cnt_, train_score_updater_->score());
+//       // shrinkage by learning rate
+//       new_tree->Shrinkage(shrinkage_rate_);
+//       // update score
+//       UpdateScore(new_tree.get(), cur_tree_id);
+//       if (std::fabs(init_scores[cur_tree_id]) > kEpsilon) {
+//         new_tree->AddBias(init_scores[cur_tree_id]);
+//       }
+//     } else {
+//       // only add default score one-time
+//       if (models_.size() < static_cast<size_t>(num_tree_per_iteration_)) {
+//         if (objective_function_ != nullptr && !config_->boost_from_average && !train_score_updater_->has_init_score()) {
+//           init_scores[cur_tree_id] = ObtainAutomaticInitialScore(objective_function_, cur_tree_id);
+//           // updates scores
+//           train_score_updater_->AddScore(init_scores[cur_tree_id], cur_tree_id);
+//           for (auto& score_updater : valid_score_updater_) {
+//             score_updater->AddScore(init_scores[cur_tree_id], cur_tree_id);
+//           }
+//         }
+//         new_tree->AsConstantTree(init_scores[cur_tree_id]);
+//       }
+//     }
+//     // add model
+//     models_.push_back(std::move(new_tree));
+//   }
+//
+//   if (!should_continue) {
+//     Log::Warning("Stopped training because there are no more leaves that meet the split requirements");
+//     if (models_.size() > static_cast<size_t>(num_tree_per_iteration_)) {
+//       for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//         models_.pop_back();
+//       }
+//     }
+//     return true;
+//   }
+//
+//   ++iter_;
+//   return false;
+// }
 
-  if (gradients != nullptr && is_use_subset_ && bag_data_cnt_ < num_data_ && !boosting_on_gpu_ && config_->boosting != std::string("goss")) {
-    // allocate gradients_ and hessians_ for copy gradients for using data subset
-    int64_t total_size = static_cast<int64_t>(num_data_) * num_tree_per_iteration_;
-    gradients_.resize(total_size);
-    hessians_.resize(total_size);
-    gradients_pointer_ = gradients_.data();
-    hessians_pointer_ = hessians_.data();
-  }
-
-  bool should_continue = false;
-  for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-    const size_t offset = static_cast<size_t>(cur_tree_id) * num_data_;
-    std::unique_ptr<Tree> new_tree(new Tree(2, false, false));
-    if (class_need_train_[cur_tree_id] && train_data_->num_features() > 0) {
-      auto grad = gradients + offset;
-      auto hess = hessians + offset;
-      // need to copy gradients for bagging subset.
-      if (is_use_subset_ && bag_data_cnt_ < num_data_ && !boosting_on_gpu_) {
-        for (int i = 0; i < bag_data_cnt_; ++i) {
-          gradients_pointer_[offset + i] = grad[bag_data_indices_[i]];
-          hessians_pointer_[offset + i] = hess[bag_data_indices_[i]];
-        }
-        grad = gradients_pointer_ + offset;
-        hess = hessians_pointer_ + offset;
-      }
-      bool is_first_tree = models_.size() < static_cast<size_t>(num_tree_per_iteration_);
-      new_tree.reset(tree_learner_->Train(grad, hess, is_first_tree));
-    }
-
-    if (new_tree->num_leaves() > 1) {
-      should_continue = true;
-      auto score_ptr = train_score_updater_->score() + offset;
-      auto residual_getter = [score_ptr](const label_t* label, int i) {return static_cast<double>(label[i]) - score_ptr[i]; };
-      tree_learner_->RenewTreeOutput(new_tree.get(), objective_function_, residual_getter,
-                                     num_data_, bag_data_indices_.data(), bag_data_cnt_, train_score_updater_->score());
-      // shrinkage by learning rate
-      new_tree->Shrinkage(shrinkage_rate_);
-      // update score
-      UpdateScore(new_tree.get(), cur_tree_id);
-      if (std::fabs(init_scores[cur_tree_id]) > kEpsilon) {
-        new_tree->AddBias(init_scores[cur_tree_id]);
-      }
-    } else {
-      // only add default score one-time
-      if (models_.size() < static_cast<size_t>(num_tree_per_iteration_)) {
-        if (objective_function_ != nullptr && !config_->boost_from_average && !train_score_updater_->has_init_score()) {
-          init_scores[cur_tree_id] = ObtainAutomaticInitialScore(objective_function_, cur_tree_id);
-          // updates scores
-          train_score_updater_->AddScore(init_scores[cur_tree_id], cur_tree_id);
-          for (auto& score_updater : valid_score_updater_) {
-            score_updater->AddScore(init_scores[cur_tree_id], cur_tree_id);
-          }
-        }
-        new_tree->AsConstantTree(init_scores[cur_tree_id]);
-      }
-    }
-    // add model
-    models_.push_back(std::move(new_tree));
-  }
-
-  if (!should_continue) {
-    Log::Warning("Stopped training because there are no more leaves that meet the split requirements");
-    if (models_.size() > static_cast<size_t>(num_tree_per_iteration_)) {
-      for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-        models_.pop_back();
-      }
-    }
-    return true;
-  }
-
-  ++iter_;
-  return false;
-}
-
-void GBDT::RollbackOneIter() {
-  if (iter_ <= 0) { return; }
-  // reset score
-  for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-    auto curr_tree = models_.size() - num_tree_per_iteration_ + cur_tree_id;
-    models_[curr_tree]->Shrinkage(-1.0);
-    train_score_updater_->AddScore(models_[curr_tree].get(), cur_tree_id);
-    for (auto& score_updater : valid_score_updater_) {
-      score_updater->AddScore(models_[curr_tree].get(), cur_tree_id);
-    }
-  }
-  // remove model
-  for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-    models_.pop_back();
-  }
-  --iter_;
-}
+// void GBDT::RollbackOneIter() {
+//   if (iter_ <= 0) { return; }
+//   // reset score
+//   for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//     auto curr_tree = models_.size() - num_tree_per_iteration_ + cur_tree_id;
+//     models_[curr_tree]->Shrinkage(-1.0);
+//     train_score_updater_->AddScore(models_[curr_tree].get(), cur_tree_id);
+//     for (auto& score_updater : valid_score_updater_) {
+//       score_updater->AddScore(models_[curr_tree].get(), cur_tree_id);
+//     }
+//   }
+//   // remove model
+//   for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//     models_.pop_back();
+//   }
+//   --iter_;
+// }
 
 bool GBDT::EvalAndCheckEarlyStopping() {
   bool is_met_early_stopping = false;
@@ -697,27 +697,27 @@ std::string GBDT::OutputMetric(int iter) {
 }
 
 /*! \brief Get eval result */
-std::vector<double> GBDT::GetEvalAt(int data_idx) const {
-  CHECK(data_idx >= 0 && data_idx <= static_cast<int>(valid_score_updater_.size()));
-  std::vector<double> ret;
-  if (data_idx == 0) {
-    for (auto& sub_metric : training_metrics_) {
-      auto scores = EvalOneMetric(sub_metric, train_score_updater_->score(), train_score_updater_->num_data());
-      for (auto score : scores) {
-        ret.push_back(score);
-      }
-    }
-  } else {
-    auto used_idx = data_idx - 1;
-    for (size_t j = 0; j < valid_metrics_[used_idx].size(); ++j) {
-      auto test_scores = EvalOneMetric(valid_metrics_[used_idx][j], valid_score_updater_[used_idx]->score(), valid_score_updater_[used_idx]->num_data());
-      for (auto score : test_scores) {
-        ret.push_back(score);
-      }
-    }
-  }
-  return ret;
-}
+// std::vector<double> GBDT::GetEvalAt(int data_idx) const {
+//   CHECK(data_idx >= 0 && data_idx <= static_cast<int>(valid_score_updater_.size()));
+//   std::vector<double> ret;
+//   if (data_idx == 0) {
+//     for (auto& sub_metric : training_metrics_) {
+//       auto scores = EvalOneMetric(sub_metric, train_score_updater_->score(), train_score_updater_->num_data());
+//       for (auto score : scores) {
+//         ret.push_back(score);
+//       }
+//     }
+//   } else {
+//     auto used_idx = data_idx - 1;
+//     for (size_t j = 0; j < valid_metrics_[used_idx].size(); ++j) {
+//       auto test_scores = EvalOneMetric(valid_metrics_[used_idx][j], valid_score_updater_[used_idx]->score(), valid_score_updater_[used_idx]->num_data());
+//       for (auto score : test_scores) {
+//         ret.push_back(score);
+//       }
+//     }
+//   }
+//   return ret;
+// }
 
 /*! \brief Get training scores result */
 const double* GBDT::GetTrainingScore(int64_t* out_len) {
@@ -811,137 +811,137 @@ double GBDT::GetLowerBoundValue() const {
   return min_value;
 }
 
-void GBDT::ResetTrainingData(const Dataset* train_data, const ObjectiveFunction* objective_function,
-                             const std::vector<const Metric*>& training_metrics) {
-  if (train_data != train_data_ && !train_data_->CheckAlign(*train_data)) {
-    Log::Fatal("Cannot reset training data, since new training data has different bin mappers");
-  }
+// void GBDT::ResetTrainingData(const Dataset* train_data, const ObjectiveFunction* objective_function,
+//                              const std::vector<const Metric*>& training_metrics) {
+//   if (train_data != train_data_ && !train_data_->CheckAlign(*train_data)) {
+//     Log::Fatal("Cannot reset training data, since new training data has different bin mappers");
+//   }
+//
+//   objective_function_ = objective_function;
+//   if (objective_function_ != nullptr) {
+//     CHECK_EQ(num_tree_per_iteration_, objective_function_->NumModelPerIteration());
+//     if (objective_function_->IsRenewTreeOutput() && !config_->monotone_constraints.empty()) {
+//       Log::Fatal("Cannot use ``monotone_constraints`` in %s objective, please disable it.", objective_function_->GetName());
+//     }
+//   }
+//   is_constant_hessian_ = GetIsConstHessian(objective_function);
+//
+//   // push training metrics
+//   training_metrics_.clear();
+//   for (const auto& metric : training_metrics) {
+//     training_metrics_.push_back(metric);
+//   }
+//   training_metrics_.shrink_to_fit();
+//
+//   boosting_on_gpu_ = objective_function_ != nullptr && objective_function_->IsCUDAObjective();
+//   tree_learner_->ResetBoostingOnGPU(boosting_on_gpu_);
+//
+//   if (train_data != train_data_) {
+//     train_data_ = train_data;
+//     // not same training data, need reset score and others
+//     // create score tracker
+//     #ifdef USE_CUDA_EXP
+//     if (config_->device_type == std::string("cuda_exp")) {
+//       train_score_updater_.reset(new CUDAScoreUpdater(train_data_, num_tree_per_iteration_, boosting_on_gpu_));
+//     } else {
+//     #endif  // USE_CUDA_EXP
+//       train_score_updater_.reset(new ScoreUpdater(train_data_, num_tree_per_iteration_));
+//     #ifdef USE_CUDA_EXP
+//     }
+//     #endif  // USE_CUDA_EXP
+//
+//     // update score
+//     for (int i = 0; i < iter_; ++i) {
+//       for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
+//         auto curr_tree = (i + num_init_iteration_) * num_tree_per_iteration_ + cur_tree_id;
+//         train_score_updater_->AddScore(models_[curr_tree].get(), cur_tree_id);
+//       }
+//     }
+//
+//     num_data_ = train_data_->num_data();
+//
+//     // create buffer for gradients and hessians
+//     if (objective_function_ != nullptr) {
+//       const size_t total_size = static_cast<size_t>(num_data_) * num_tree_per_iteration_;
+//       #ifdef USE_CUDA_EXP
+//       if (config_->device_type == std::string("cuda_exp") && boosting_on_gpu_) {
+//         if (gradients_pointer_ != nullptr) {
+//           CHECK_NOTNULL(hessians_pointer_);
+//           DeallocateCUDAMemory<score_t>(&gradients_pointer_, __FILE__, __LINE__);
+//           DeallocateCUDAMemory<score_t>(&hessians_pointer_, __FILE__, __LINE__);
+//         }
+//         AllocateCUDAMemory<score_t>(&gradients_pointer_, total_size, __FILE__, __LINE__);
+//         AllocateCUDAMemory<score_t>(&hessians_pointer_, total_size, __FILE__, __LINE__);
+//       } else {
+//       #endif  // USE_CUDA_EXP
+//         gradients_.resize(total_size);
+//         hessians_.resize(total_size);
+//         gradients_pointer_ = gradients_.data();
+//         hessians_pointer_ = hessians_.data();
+//       #ifdef USE_CUDA_EXP
+//       }
+//       #endif  // USE_CUDA_EXP
+//     } else if (config_->boosting == std::string("goss")) {
+//       const size_t total_size = static_cast<size_t>(num_data_) * num_tree_per_iteration_;
+//       gradients_.resize(total_size);
+//       hessians_.resize(total_size);
+//       gradients_pointer_ = gradients_.data();
+//       hessians_pointer_ = hessians_.data();
+//     }
+//
+//     max_feature_idx_ = train_data_->num_total_features() - 1;
+//     label_idx_ = train_data_->label_idx();
+//     feature_names_ = train_data_->feature_names();
+//     feature_infos_ = train_data_->feature_infos();
+//     parser_config_str_ = train_data_->parser_config_str();
+//
+//     tree_learner_->ResetTrainingData(train_data, is_constant_hessian_);
+//     ResetBaggingConfig(config_.get(), true);
+//   } else {
+//     tree_learner_->ResetIsConstantHessian(is_constant_hessian_);
+//   }
+// }
 
-  objective_function_ = objective_function;
-  if (objective_function_ != nullptr) {
-    CHECK_EQ(num_tree_per_iteration_, objective_function_->NumModelPerIteration());
-    if (objective_function_->IsRenewTreeOutput() && !config_->monotone_constraints.empty()) {
-      Log::Fatal("Cannot use ``monotone_constraints`` in %s objective, please disable it.", objective_function_->GetName());
-    }
-  }
-  is_constant_hessian_ = GetIsConstHessian(objective_function);
-
-  // push training metrics
-  training_metrics_.clear();
-  for (const auto& metric : training_metrics) {
-    training_metrics_.push_back(metric);
-  }
-  training_metrics_.shrink_to_fit();
-
-  boosting_on_gpu_ = objective_function_ != nullptr && objective_function_->IsCUDAObjective();
-  tree_learner_->ResetBoostingOnGPU(boosting_on_gpu_);
-
-  if (train_data != train_data_) {
-    train_data_ = train_data;
-    // not same training data, need reset score and others
-    // create score tracker
-    #ifdef USE_CUDA_EXP
-    if (config_->device_type == std::string("cuda_exp")) {
-      train_score_updater_.reset(new CUDAScoreUpdater(train_data_, num_tree_per_iteration_, boosting_on_gpu_));
-    } else {
-    #endif  // USE_CUDA_EXP
-      train_score_updater_.reset(new ScoreUpdater(train_data_, num_tree_per_iteration_));
-    #ifdef USE_CUDA_EXP
-    }
-    #endif  // USE_CUDA_EXP
-
-    // update score
-    for (int i = 0; i < iter_; ++i) {
-      for (int cur_tree_id = 0; cur_tree_id < num_tree_per_iteration_; ++cur_tree_id) {
-        auto curr_tree = (i + num_init_iteration_) * num_tree_per_iteration_ + cur_tree_id;
-        train_score_updater_->AddScore(models_[curr_tree].get(), cur_tree_id);
-      }
-    }
-
-    num_data_ = train_data_->num_data();
-
-    // create buffer for gradients and hessians
-    if (objective_function_ != nullptr) {
-      const size_t total_size = static_cast<size_t>(num_data_) * num_tree_per_iteration_;
-      #ifdef USE_CUDA_EXP
-      if (config_->device_type == std::string("cuda_exp") && boosting_on_gpu_) {
-        if (gradients_pointer_ != nullptr) {
-          CHECK_NOTNULL(hessians_pointer_);
-          DeallocateCUDAMemory<score_t>(&gradients_pointer_, __FILE__, __LINE__);
-          DeallocateCUDAMemory<score_t>(&hessians_pointer_, __FILE__, __LINE__);
-        }
-        AllocateCUDAMemory<score_t>(&gradients_pointer_, total_size, __FILE__, __LINE__);
-        AllocateCUDAMemory<score_t>(&hessians_pointer_, total_size, __FILE__, __LINE__);
-      } else {
-      #endif  // USE_CUDA_EXP
-        gradients_.resize(total_size);
-        hessians_.resize(total_size);
-        gradients_pointer_ = gradients_.data();
-        hessians_pointer_ = hessians_.data();
-      #ifdef USE_CUDA_EXP
-      }
-      #endif  // USE_CUDA_EXP
-    } else if (config_->boosting == std::string("goss")) {
-      const size_t total_size = static_cast<size_t>(num_data_) * num_tree_per_iteration_;
-      gradients_.resize(total_size);
-      hessians_.resize(total_size);
-      gradients_pointer_ = gradients_.data();
-      hessians_pointer_ = hessians_.data();
-    }
-
-    max_feature_idx_ = train_data_->num_total_features() - 1;
-    label_idx_ = train_data_->label_idx();
-    feature_names_ = train_data_->feature_names();
-    feature_infos_ = train_data_->feature_infos();
-    parser_config_str_ = train_data_->parser_config_str();
-
-    tree_learner_->ResetTrainingData(train_data, is_constant_hessian_);
-    ResetBaggingConfig(config_.get(), true);
-  } else {
-    tree_learner_->ResetIsConstantHessian(is_constant_hessian_);
-  }
-}
-
-void GBDT::ResetConfig(const Config* config) {
-  auto new_config = std::unique_ptr<Config>(new Config(*config));
-  if (!config->monotone_constraints.empty()) {
-    CHECK_EQ(static_cast<size_t>(train_data_->num_total_features()), config->monotone_constraints.size());
-  }
-  if (!config->feature_contri.empty()) {
-    CHECK_EQ(static_cast<size_t>(train_data_->num_total_features()), config->feature_contri.size());
-  }
-  if (objective_function_ != nullptr && objective_function_->IsRenewTreeOutput() && !config->monotone_constraints.empty()) {
-    Log::Fatal("Cannot use ``monotone_constraints`` in %s objective, please disable it.", objective_function_->GetName());
-  }
-  early_stopping_round_ = new_config->early_stopping_round;
-  shrinkage_rate_ = new_config->learning_rate;
-  if (tree_learner_ != nullptr) {
-    tree_learner_->ResetConfig(new_config.get());
-  }
-
-  boosting_on_gpu_ = objective_function_ != nullptr && objective_function_->IsCUDAObjective();
-  tree_learner_->ResetBoostingOnGPU(boosting_on_gpu_);
-
-  if (train_data_ != nullptr) {
-    ResetBaggingConfig(new_config.get(), false);
-  }
-  if (config_.get() != nullptr && config_->forcedsplits_filename != new_config->forcedsplits_filename) {
-    // load forced_splits file
-    if (!new_config->forcedsplits_filename.empty()) {
-      std::ifstream forced_splits_file(
-          new_config->forcedsplits_filename.c_str());
-      std::stringstream buffer;
-      buffer << forced_splits_file.rdbuf();
-      std::string err;
-      forced_splits_json_ = Json::parse(buffer.str(), &err);
-      tree_learner_->SetForcedSplit(&forced_splits_json_);
-    } else {
-      forced_splits_json_ = Json();
-      tree_learner_->SetForcedSplit(nullptr);
-    }
-  }
-  config_.reset(new_config.release());
-}
+// void GBDT::ResetConfig(const Config* config) {
+//   auto new_config = std::unique_ptr<Config>(new Config(*config));
+//   if (!config->monotone_constraints.empty()) {
+//     CHECK_EQ(static_cast<size_t>(train_data_->num_total_features()), config->monotone_constraints.size());
+//   }
+//   if (!config->feature_contri.empty()) {
+//     CHECK_EQ(static_cast<size_t>(train_data_->num_total_features()), config->feature_contri.size());
+//   }
+//   if (objective_function_ != nullptr && objective_function_->IsRenewTreeOutput() && !config->monotone_constraints.empty()) {
+//     Log::Fatal("Cannot use ``monotone_constraints`` in %s objective, please disable it.", objective_function_->GetName());
+//   }
+//   early_stopping_round_ = new_config->early_stopping_round;
+//   shrinkage_rate_ = new_config->learning_rate;
+//   if (tree_learner_ != nullptr) {
+//     tree_learner_->ResetConfig(new_config.get());
+//   }
+//
+//   boosting_on_gpu_ = objective_function_ != nullptr && objective_function_->IsCUDAObjective();
+//   tree_learner_->ResetBoostingOnGPU(boosting_on_gpu_);
+//
+//   if (train_data_ != nullptr) {
+//     ResetBaggingConfig(new_config.get(), false);
+//   }
+//   if (config_.get() != nullptr && config_->forcedsplits_filename != new_config->forcedsplits_filename) {
+//     // load forced_splits file
+//     if (!new_config->forcedsplits_filename.empty()) {
+//       std::ifstream forced_splits_file(
+//           new_config->forcedsplits_filename.c_str());
+//       std::stringstream buffer;
+//       buffer << forced_splits_file.rdbuf();
+//       std::string err;
+//       forced_splits_json_ = Json::parse(buffer.str(), &err);
+//       tree_learner_->SetForcedSplit(&forced_splits_json_);
+//     } else {
+//       forced_splits_json_ = Json();
+//       tree_learner_->SetForcedSplit(nullptr);
+//     }
+//   }
+//   config_.reset(new_config.release());
+// }
 
 void GBDT::ResetBaggingConfig(const Config* config, bool is_change_dataset) {
   // if need bagging, create buffer
