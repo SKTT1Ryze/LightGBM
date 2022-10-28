@@ -50,7 +50,7 @@ typedef void* FastConfigHandle; /*!< \brief Handle of FastConfig. */
  * \brief Get string message of the last error.
  * \return Error information
  */
-LIGHTGBM_C_EXPORT const char* LGBM_GetLastError();
+// LIGHTGBM_C_EXPORT const char* LGBM_GetLastError();
 
 /*!
  * \brief Dump all parameter names with their aliases to JSON.
@@ -59,16 +59,16 @@ LIGHTGBM_C_EXPORT const char* LGBM_GetLastError();
  * \param[out] out_str JSON format string of parameters, should pre-allocate memory
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DumpParamAliases(int64_t buffer_len,
-                                            int64_t* out_len,
-                                            char* out_str);
+// LIGHTGBM_C_EXPORT int LGBM_DumpParamAliases(int64_t buffer_len,
+//                                             int64_t* out_len,
+//                                             char* out_str);
 
 /*!
  * \brief Register a callback function for log redirecting.
  * \param callback The callback function to register
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_RegisterLogCallback(void (*callback)(const char*));
+// LIGHTGBM_C_EXPORT int LGBM_RegisterLogCallback(void (*callback)(const char*));
 
 /*!
  * \brief Get number of samples based on parameters and total number of rows of data.
@@ -77,9 +77,9 @@ LIGHTGBM_C_EXPORT int LGBM_RegisterLogCallback(void (*callback)(const char*));
  * \param[out] out Number of samples. This value is used to pre-allocate memory to hold sample indices when calling ``LGBM_SampleIndices``
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_GetSampleCount(int32_t num_total_row,
-                                          const char* parameters,
-                                          int* out);
+// LIGHTGBM_C_EXPORT int LGBM_GetSampleCount(int32_t num_total_row,
+//                                           const char* parameters,
+//                                           int* out);
 
 /*!
  * \brief Create sample indices for total number of rows.
@@ -91,10 +91,10 @@ LIGHTGBM_C_EXPORT int LGBM_GetSampleCount(int32_t num_total_row,
  * \param[out] out_len Number of indices
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_SampleIndices(int32_t num_total_row,
-                                         const char* parameters,
-                                         void* out,
-                                         int32_t* out_len);
+// LIGHTGBM_C_EXPORT int LGBM_SampleIndices(int32_t num_total_row,
+//                                          const char* parameters,
+//                                          void* out,
+//                                          int32_t* out_len);
 
 /* --- start Dataset interface */
 
@@ -106,10 +106,10 @@ LIGHTGBM_C_EXPORT int LGBM_SampleIndices(int32_t num_total_row,
  * \param[out] out A loaded dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromFile(const char* filename,
-                                                 const char* parameters,
-                                                 const DatasetHandle reference,
-                                                 DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromFile(const char* filename,
+//                                                  const char* parameters,
+//                                                  const DatasetHandle reference,
+//                                                  DatasetHandle* out);
 
 /*!
  * \brief Allocate the space for dataset and bucket feature bins according to sampled data.
@@ -124,15 +124,15 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromFile(const char* filename,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromSampledColumn(double** sample_data,
-                                                          int** sample_indices,
-                                                          int32_t ncol,
-                                                          const int* num_per_col,
-                                                          int32_t num_sample_row,
-                                                          int32_t num_local_row,
-                                                          int64_t num_dist_row,
-                                                          const char* parameters,
-                                                          DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromSampledColumn(double** sample_data,
+//                                                           int** sample_indices,
+//                                                           int32_t ncol,
+//                                                           const int* num_per_col,
+//                                                           int32_t num_sample_row,
+//                                                           int32_t num_local_row,
+//                                                           int64_t num_dist_row,
+//                                                           const char* parameters,
+//                                                           DatasetHandle* out);
 
 /*!
  * \brief Allocate the space for dataset and bucket feature bins according to reference dataset.
@@ -141,9 +141,9 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromSampledColumn(double** sample_data,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateByReference(const DatasetHandle reference,
-                                                    int64_t num_total_row,
-                                                    DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateByReference(const DatasetHandle reference,
+//                                                     int64_t num_total_row,
+//                                                     DatasetHandle* out);
 
 /*!
  * \brief Initialize the Dataset for streaming.
@@ -155,12 +155,12 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateByReference(const DatasetHandle referenc
  * \param nthreads Number of external threads that will use the PushRows APIs
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetInitStreaming(DatasetHandle dataset,
-                                                int32_t has_weights,
-                                                int32_t has_init_scores,
-                                                int32_t has_queries,
-                                                int32_t nclasses,
-                                                int32_t nthreads);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetInitStreaming(DatasetHandle dataset,
+//                                                 int32_t has_weights,
+//                                                 int32_t has_init_scores,
+//                                                 int32_t has_queries,
+//                                                 int32_t nclasses,
+//                                                 int32_t nthreads);
 
 /*!
  * \brief Push data to existing dataset, if ``nrow + start_row == num_total_row``, will call ``dataset->FinishLoad``.
@@ -172,12 +172,12 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetInitStreaming(DatasetHandle dataset,
  * \param start_row Row start index
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetPushRows(DatasetHandle dataset,
-                                           const void* data,
-                                           int data_type,
-                                           int32_t nrow,
-                                           int32_t ncol,
-                                           int32_t start_row);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetPushRows(DatasetHandle dataset,
+//                                            const void* data,
+//                                            int data_type,
+//                                            int32_t nrow,
+//                                            int32_t ncol,
+//                                            int32_t start_row);
 
 /*!
  * \brief Push data to existing dataset.
@@ -199,17 +199,17 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetPushRows(DatasetHandle dataset,
  * \param tid The id of the calling thread, from 0...N-1 threads
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsWithMetadata(DatasetHandle dataset,
-                                                       const void* data,
-                                                       int data_type,
-                                                       int32_t nrow,
-                                                       int32_t ncol,
-                                                       int32_t start_row,
-                                                       const float* label,
-                                                       const float* weight,
-                                                       const double* init_score,
-                                                       const int32_t* query,
-                                                       int32_t tid);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsWithMetadata(DatasetHandle dataset,
+//                                                        const void* data,
+//                                                        int data_type,
+//                                                        int32_t nrow,
+//                                                        int32_t ncol,
+//                                                        int32_t start_row,
+//                                                        const float* label,
+//                                                        const float* weight,
+//                                                        const double* init_score,
+//                                                        const int32_t* query,
+//                                                        int32_t tid);
 
 /*!
  * \brief Push data to existing dataset, if ``nrow + start_row == num_total_row``, will call ``dataset->FinishLoad``.
@@ -225,16 +225,16 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsWithMetadata(DatasetHandle dataset,
  * \param start_row Row start index
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSR(DatasetHandle dataset,
-                                                const void* indptr,
-                                                int indptr_type,
-                                                const int32_t* indices,
-                                                const void* data,
-                                                int data_type,
-                                                int64_t nindptr,
-                                                int64_t nelem,
-                                                int64_t num_col,
-                                                int64_t start_row);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSR(DatasetHandle dataset,
+//                                                 const void* indptr,
+//                                                 int indptr_type,
+//                                                 const int32_t* indices,
+//                                                 const void* data,
+//                                                 int data_type,
+//                                                 int64_t nindptr,
+//                                                 int64_t nelem,
+//                                                 int64_t num_col,
+//                                                 int64_t start_row);
 
 /*!
  * \brief Push CSR data to existing dataset. (See ``LGBM_DatasetPushRowsWithMetadata`` for more details.)
@@ -254,20 +254,20 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSR(DatasetHandle dataset,
  * \param tid The id of the calling thread, from 0...N-1 threads
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSRWithMetadata(DatasetHandle dataset,
-                                                            const void* indptr,
-                                                            int indptr_type,
-                                                            const int32_t* indices,
-                                                            const void* data,
-                                                            int data_type,
-                                                            int64_t nindptr,
-                                                            int64_t nelem,
-                                                            int64_t start_row,
-                                                            const float* label,
-                                                            const float* weight,
-                                                            const double* init_score,
-                                                            const int32_t* query,
-                                                            int32_t tid);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSRWithMetadata(DatasetHandle dataset,
+//                                                             const void* indptr,
+//                                                             int indptr_type,
+//                                                             const int32_t* indices,
+//                                                             const void* data,
+//                                                             int data_type,
+//                                                             int64_t nindptr,
+//                                                             int64_t nelem,
+//                                                             int64_t start_row,
+//                                                             const float* label,
+//                                                             const float* weight,
+//                                                             const double* init_score,
+//                                                             const int32_t* query,
+//                                                             int32_t tid);
 
 /*!
  * \brief Set whether or not the Dataset waits for a manual MarkFinished call or calls FinishLoad on itself automatically.
@@ -276,14 +276,14 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetPushRowsByCSRWithMetadata(DatasetHandle datase
  * \param wait Whether to wait or not (1 or 0)
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetSetWaitForManualFinish(DatasetHandle dataset, int wait);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetSetWaitForManualFinish(DatasetHandle dataset, int wait);
 
 /*!
  * \brief Mark the Dataset as complete by calling ``dataset->FinishLoad``.
  * \param dataset Handle of dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetMarkFinished(DatasetHandle dataset);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetMarkFinished(DatasetHandle dataset);
 
 /*!
  * \brief Create a dataset from CSR format.
@@ -300,17 +300,17 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetMarkFinished(DatasetHandle dataset);
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSR(const void* indptr,
-                                                int indptr_type,
-                                                const int32_t* indices,
-                                                const void* data,
-                                                int data_type,
-                                                int64_t nindptr,
-                                                int64_t nelem,
-                                                int64_t num_col,
-                                                const char* parameters,
-                                                const DatasetHandle reference,
-                                                DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSR(const void* indptr,
+//                                                 int indptr_type,
+//                                                 const int32_t* indices,
+//                                                 const void* data,
+//                                                 int data_type,
+//                                                 int64_t nindptr,
+//                                                 int64_t nelem,
+//                                                 int64_t num_col,
+//                                                 const char* parameters,
+//                                                 const DatasetHandle reference,
+//                                                 DatasetHandle* out);
 
 /*!
  * \brief Create a dataset from CSR format through callbacks.
@@ -323,12 +323,12 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSR(const void* indptr,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSRFunc(void* get_row_funptr,
-                                                    int num_rows,
-                                                    int64_t num_col,
-                                                    const char* parameters,
-                                                    const DatasetHandle reference,
-                                                    DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSRFunc(void* get_row_funptr,
+//                                                     int num_rows,
+//                                                     int64_t num_col,
+//                                                     const char* parameters,
+//                                                     const DatasetHandle reference,
+//                                                     DatasetHandle* out);
 
 /*!
  * \brief Create a dataset from CSC format.
@@ -345,17 +345,17 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSRFunc(void* get_row_funptr,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSC(const void* col_ptr,
-                                                int col_ptr_type,
-                                                const int32_t* indices,
-                                                const void* data,
-                                                int data_type,
-                                                int64_t ncol_ptr,
-                                                int64_t nelem,
-                                                int64_t num_row,
-                                                const char* parameters,
-                                                const DatasetHandle reference,
-                                                DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSC(const void* col_ptr,
+//                                                 int col_ptr_type,
+//                                                 const int32_t* indices,
+//                                                 const void* data,
+//                                                 int data_type,
+//                                                 int64_t ncol_ptr,
+//                                                 int64_t nelem,
+//                                                 int64_t num_row,
+//                                                 const char* parameters,
+//                                                 const DatasetHandle reference,
+//                                                 DatasetHandle* out);
 
 /*!
  * \brief Create dataset from dense matrix.
@@ -369,14 +369,14 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromCSC(const void* col_ptr,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMat(const void* data,
-                                                int data_type,
-                                                int32_t nrow,
-                                                int32_t ncol,
-                                                int is_row_major,
-                                                const char* parameters,
-                                                const DatasetHandle reference,
-                                                DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMat(const void* data,
+//                                                 int data_type,
+//                                                 int32_t nrow,
+//                                                 int32_t ncol,
+//                                                 int is_row_major,
+//                                                 const char* parameters,
+//                                                 const DatasetHandle reference,
+//                                                 DatasetHandle* out);
 
 /*!
  * \brief Create dataset from array of dense matrices.
@@ -391,15 +391,15 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMat(const void* data,
  * \param[out] out Created dataset
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMats(int32_t nmat,
-                                                 const void** data,
-                                                 int data_type,
-                                                 int32_t* nrow,
-                                                 int32_t ncol,
-                                                 int is_row_major,
-                                                 const char* parameters,
-                                                 const DatasetHandle reference,
-                                                 DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMats(int32_t nmat,
+//                                                  const void** data,
+//                                                  int data_type,
+//                                                  int32_t* nrow,
+//                                                  int32_t ncol,
+//                                                  int is_row_major,
+//                                                  const char* parameters,
+//                                                  const DatasetHandle reference,
+//                                                  DatasetHandle* out);
 
 /*!
  * \brief Create subset of a data.
@@ -410,11 +410,11 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetCreateFromMats(int32_t nmat,
  * \param[out] out Subset of data
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetSubset(const DatasetHandle handle,
-                                            const int32_t* used_row_indices,
-                                            int32_t num_used_row_indices,
-                                            const char* parameters,
-                                            DatasetHandle* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetSubset(const DatasetHandle handle,
+//                                             const int32_t* used_row_indices,
+//                                             int32_t num_used_row_indices,
+//                                             const char* parameters,
+//                                             DatasetHandle* out);
 
 /*!
  * \brief Save feature names to dataset.
@@ -423,9 +423,9 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetGetSubset(const DatasetHandle handle,
  * \param num_feature_names Number of feature names
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetSetFeatureNames(DatasetHandle handle,
-                                                  const char** feature_names,
-                                                  int num_feature_names);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetSetFeatureNames(DatasetHandle handle,
+//                                                   const char** feature_names,
+//                                                   int num_feature_names);
 
 /*!
  * \brief Get feature names of dataset.
@@ -439,19 +439,19 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetSetFeatureNames(DatasetHandle handle,
  * \param[out] feature_names Feature names, should pre-allocate memory
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetFeatureNames(DatasetHandle handle,
-                                                  const int len,
-                                                  int* num_feature_names,
-                                                  const size_t buffer_len,
-                                                  size_t* out_buffer_len,
-                                                  char** feature_names);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetFeatureNames(DatasetHandle handle,
+//                                                   const int len,
+//                                                   int* num_feature_names,
+//                                                   const size_t buffer_len,
+//                                                   size_t* out_buffer_len,
+//                                                   char** feature_names);
 
 /*!
  * \brief Free space for dataset.
  * \param handle Handle of dataset to be freed
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetFree(DatasetHandle handle);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetFree(DatasetHandle handle);
 
 /*!
  * \brief Save dataset to binary file.
@@ -459,8 +459,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetFree(DatasetHandle handle);
  * \param filename The name of the file
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetSaveBinary(DatasetHandle handle,
-                                             const char* filename);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetSaveBinary(DatasetHandle handle,
+//                                              const char* filename);
 
 /*!
  * \brief Save dataset to text file, intended for debugging use only.
@@ -468,8 +468,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetSaveBinary(DatasetHandle handle,
  * \param filename The name of the file
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetDumpText(DatasetHandle handle,
-                                           const char* filename);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetDumpText(DatasetHandle handle,
+//                                            const char* filename);
 
 /*!
  * \brief Set vector to a content in info.
@@ -484,11 +484,11 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetDumpText(DatasetHandle handle,
  * \param type Type of ``field_data`` pointer, can be ``C_API_DTYPE_INT32``, ``C_API_DTYPE_FLOAT32`` or ``C_API_DTYPE_FLOAT64``
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetSetField(DatasetHandle handle,
-                                           const char* field_name,
-                                           const void* field_data,
-                                           int num_element,
-                                           int type);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetSetField(DatasetHandle handle,
+//                                            const char* field_name,
+//                                            const void* field_data,
+//                                            int num_element,
+//                                            int type);
 
 /*!
  * \brief Get info vector from dataset.
@@ -499,11 +499,11 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetSetField(DatasetHandle handle,
  * \param[out] out_type Type of result pointer, can be ``C_API_DTYPE_INT32``, ``C_API_DTYPE_FLOAT32`` or ``C_API_DTYPE_FLOAT64``
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetField(DatasetHandle handle,
-                                           const char* field_name,
-                                           int* out_len,
-                                           const void** out_ptr,
-                                           int* out_type);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetField(DatasetHandle handle,
+//                                            const char* field_name,
+//                                            int* out_len,
+//                                            const void** out_ptr,
+//                                            int* out_type);
 
 /*!
  * \brief Raise errors for attempts to update dataset parameters.
@@ -511,8 +511,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetGetField(DatasetHandle handle,
  * \param new_parameters New dataset parameters
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetUpdateParamChecking(const char* old_parameters,
-                                                      const char* new_parameters);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetUpdateParamChecking(const char* old_parameters,
+//                                                       const char* new_parameters);
 
 /*!
  * \brief Get number of data points.
@@ -520,8 +520,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetUpdateParamChecking(const char* old_parameters
  * \param[out] out The address to hold number of data points
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumData(DatasetHandle handle,
-                                             int* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumData(DatasetHandle handle,
+//                                              int* out);
 
 /*!
  * \brief Get number of features.
@@ -529,8 +529,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumData(DatasetHandle handle,
  * \param[out] out The address to hold number of features
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumFeature(DatasetHandle handle,
-                                                int* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumFeature(DatasetHandle handle,
+//                                                 int* out);
 
 /*!
  * \brief Get number of bins for feature.
@@ -539,9 +539,9 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetGetNumFeature(DatasetHandle handle,
  * \param[out] out The address to hold number of bins
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetGetFeatureNumBin(DatasetHandle handle,
-                                                   int feature,
-                                                   int* out);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetGetFeatureNumBin(DatasetHandle handle,
+//                                                    int feature,
+//                                                    int* out);
 
 /*!
  * \brief Add features from ``source`` to ``target``.
@@ -549,8 +549,8 @@ LIGHTGBM_C_EXPORT int LGBM_DatasetGetFeatureNumBin(DatasetHandle handle,
  * \param source The handle of the dataset to take features from
  * \return 0 when succeed, -1 when failure happens
  */
-LIGHTGBM_C_EXPORT int LGBM_DatasetAddFeaturesFrom(DatasetHandle target,
-                                                  DatasetHandle source);
+// LIGHTGBM_C_EXPORT int LGBM_DatasetAddFeaturesFrom(DatasetHandle target,
+//                                                   DatasetHandle source);
 
 /* --- start Booster interfaces */
 
